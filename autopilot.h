@@ -19,7 +19,7 @@ public:
     void restateRelay();
 
 signals:
-    //void sendCommandToSlave14(int &comm);
+    void sendCommandToSlave14(int &comm);
 
 public slots:
     void loop();

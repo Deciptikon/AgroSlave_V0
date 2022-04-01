@@ -38,10 +38,22 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    ///-------Create I2C slave device----------------------------------------------------------------
+    controlleri2c_14 = new ControllerI2C();
+    controlleri2c_14->init( 0x14 );
+
+    threadControllerI2C_14 = new QThread(this);
+    controlleri2c_14->moveToThread(threadControllerI2C_14);
+    ///----------------------------------------------------------------------------------------------
+
+
+
     ///-------Connects objects-----------------------------------------------------------------------
     connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
             autopilot, SLOT(readFromGPS(const double&, const double&)) );
     //connect(gps, SIGNAL(updatePositionGeo(QGeoCoordinate&)), this, SLOT(updateLatLon(QGeoCoordinate&)));
+    //connect(ui->bt_send_read_command, SIGNAL(clicked()), slavecontroller_14, SLOT(writeData()));
+    connect(autopilot, SIGNAL(sendCommandToSlave14(int&)), controlleri2c_14, SLOT(writeData(int&)));
     ///----------------------------------------------------------------------------------------------
 
 
@@ -49,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     ///-------Start threads--------------------------------------------------------------------------
     threadAutopilot->start();
     threadGPS->start();
+    threadControllerI2C_14->start();
     ///----------------------------------------------------------------------------------------------
 }
 

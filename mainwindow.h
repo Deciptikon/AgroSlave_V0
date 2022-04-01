@@ -7,6 +7,7 @@
 
 #include "autopilot.h"
 #include "gps.h"
+#include "controlleri2c.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -30,5 +31,8 @@ private:
 
     GPS* gps;
     QThread* threadGPS;
+
+    ControllerI2C* controlleri2c_14;
+    QThread* threadControllerI2C_14;
 };
 #endif // MAINWINDOW_H

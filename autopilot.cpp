@@ -23,11 +23,12 @@ void Autopilot::loop()
     //update velocity and translate
     //here calculate drive
 
+
 }
 
 void Autopilot::readFromGPS(const double &x, const double &y)
 {
-    qDebug() << "Autopilot::readFromGPS(double &x, double &y)" << x << "\t" << y;
+    qDebug() << "Autopilot::readFromGPS(double &x, double &y)" << x << "\t |" << y;
 
 }
 
@@ -41,6 +42,6 @@ void Autopilot::restateRelay()
     stateRelay = !stateRelay;
     qDebug() << "Состояние реле изменено на " << stateRelay;
 
-    //int c='c';
-    //emit sendCommandToSlave14(c);
+    int c='c';
+    emit sendCommandToSlave14(c);
 }
