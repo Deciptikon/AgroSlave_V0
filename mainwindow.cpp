@@ -68,5 +68,14 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete autopilot;
+    delete threadAutopilot;
+    delete timerAutopilot;
+
+    delete gps;
+    delete threadGPS;
+
+    delete controlleri2c_14;
+    delete threadControllerI2C_14;
 }
 
