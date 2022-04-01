@@ -21,13 +21,14 @@ void Autopilot::loop()
     qDebug() << "void Autopilot::loop()";
 
     //update velocity and translate
-    //
+    //here calculate drive
 
 }
 
 void Autopilot::readFromGPS(const double &x, const double &y)
 {
-    qDebug() << "Autopilot::readFromGPS(double &x, double &y)";
+    qDebug() << "Autopilot::readFromGPS(double &x, double &y)" << x << "\t" << y;
+
 }
 
 int Autopilot::getMSecDeltaTime() const

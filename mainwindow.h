@@ -6,6 +6,7 @@
 #include <QThread>
 
 #include "autopilot.h"
+#include "gps.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -26,5 +27,8 @@ private:
     Autopilot* autopilot;
     QThread* threadAutopilot;
     QTimer* timerAutopilot;
+
+    GPS* gps;
+    QThread* threadGPS;
 };
 #endif // MAINWINDOW_H

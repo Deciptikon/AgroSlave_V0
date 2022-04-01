@@ -26,16 +26,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    ///-------Connects objects-----------------------------------------------------------------------
-    //connect(gps, SIGNAL(updatePositionLatLon(double&,double&)), bluetoothserver, SLOT(  sendCoord(double&,double&)) );
+    ///-------Create GPS-reader----------------------------------------------------------------------
+    gps = new GPS(this);
+    gps->init();
+    gps->setMsecUpdate(1000);
 
+    threadGPS = new QThread(this);
+
+    gps->moveToThread(threadGPS);
+    ///----------------------------------------------------------------------------------------------
+
+
+
+    ///-------Connects objects-----------------------------------------------------------------------
+    connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
+            autopilot, SLOT(readFromGPS(const double&, const double&)) );
+    //connect(gps, SIGNAL(updatePositionGeo(QGeoCoordinate&)), this, SLOT(updateLatLon(QGeoCoordinate&)));
     ///----------------------------------------------------------------------------------------------
 
 
 
     ///-------Start threads--------------------------------------------------------------------------
     threadAutopilot->start();
-
+    threadGPS->start();
     ///----------------------------------------------------------------------------------------------
 }
 
