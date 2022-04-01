@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
+#include <QThread>
+
+#include "autopilot.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +22,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    Autopilot* autopilot;
+    QThread* threadAutopilot;
+    QTimer* timerAutopilot;
 };
 #endif // MAINWINDOW_H
