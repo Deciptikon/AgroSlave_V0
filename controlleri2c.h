@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QDebug>
 
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
+
 class ControllerI2C : public QObject
 {
     Q_OBJECT
