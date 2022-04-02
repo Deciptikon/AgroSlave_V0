@@ -27,8 +27,6 @@ void GPS::init()
     serial->setFlowControl(QSerialPort::NoFlowControl);
 
     if(!serial->isOpen()) {
-        //Если порт не открыт, попытка через 100мс открыть его снова
-        QTimer::singleShot(100, this, SLOT(init()));
         serial->open(QIODevice::ReadWrite);
     }
     if(serial->isOpen()) {
@@ -46,6 +44,8 @@ void GPS::init()
         }
     } else {
         qDebug() << "SerialPort is not open";
+        //Если порт не открыт, попытка через 100мс открыть его снова
+        QTimer::singleShot(100, this, SLOT(init()));
     }
 
 }
