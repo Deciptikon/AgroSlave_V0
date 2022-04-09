@@ -31,23 +31,38 @@ void GPS::init()
     }
     if(serial->isOpen()) {
         qDebug() << "SerialPort is open";
-
-        source = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode);
-        source->setDevice(serial);
-
-        if(source){
-            connect(source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdate(QGeoPositionInfo)));
-            source->setPreferredPositioningMethods(QGeoPositionInfoSource::AllPositioningMethods);
-            source->setUpdateInterval(msecUpdate);
-            source->startUpdates();
-            qDebug() << "GPS ready and updating";
-        }
+        connect(serial, SIGNAL(readyRead()), this, SLOT(readPort()));
+        connect(this, SIGNAL(readyRead(const QByteArray &)), this, SLOT(ubxParser(const QByteArray &)));
     } else {
         qDebug() << "SerialPort is not open";
         //Если порт не открыт, попытка через 100мс открыть его снова
         QTimer::singleShot(100, this, SLOT(init()));
     }
 
+}
+
+void GPS::write(const QByteArray &bytes)
+{
+    qDebug() << "SerialPort writing";
+    if(bytes.isEmpty()) {
+        return;
+    }
+    if(!serial->isOpen()) {
+        return;
+    }
+    if(!serial->isWritable()) {
+        return;
+    }
+
+    serial->write(bytes);
+
+    if(*bytes.end() == '\n') {
+        return;
+    }
+
+    QByteArray b;
+    b.append('\n');
+    serial->write(b);
 }
 
 void GPS::positionUpdate(QGeoPositionInfo info)
@@ -66,6 +81,52 @@ void GPS::positionUpdate(QGeoPositionInfo info)
     emit updatePositionGeo(c);
     emit updatePositionXY(this->x, this->y);
     emit updatePositionLatLon(lat, lon);
+}
+
+void GPS::readPort()
+{
+    //qDebug() << "SerialPort: SIGNAL(readyRead())";
+    if(!serial->canReadLine()) {
+        return;
+    }
+
+    QByteArray bytes;
+    bytes = serial->readLine();
+
+    if(bytes.isEmpty()) {
+        qDebug() << "SerialPort read not data";
+        return;
+    }
+
+//    QString s="";
+//    for(auto b: bytes) {
+//        s.append(b);
+//    }
+//    qDebug() << "SerialPort read: " << s;
+
+    emit readyRead(bytes);//сигнал прочитанной строкой
+}
+
+void GPS::ubxParser(const QByteArray &bytes)
+{
+    if(bytes.isEmpty()) {
+        return;
+    }
+    //парсим здесь
+    //потом currentCoordinate.setLatitude(...); ...
+
+
+
+//    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
+
+//    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
+//    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
+
+//    double lat = currentCoordinate.latitude();
+//    double lon = currentCoordinate.longitude();
+
+//    emit updatePositionXY(this->x, this->y);
+//    emit updatePositionLatLon(lat, lon);
 }
 
 void GPS::latLonToXY(double lat, double lon)

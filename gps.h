@@ -27,19 +27,22 @@ signals:
     void updatePositionXY(const double &x, const double &y);
     void updatePositionLatLon(double &Lat, double &Lon);
 
+    void readyRead(const QByteArray &bytes);
+
 public slots:
     void init();
+    void write(const QByteArray &bytes);
 
 private slots:
     void positionUpdate(QGeoPositionInfo info);
-
+    void readPort();
+    void ubxParser(const QByteArray &bytes);
 private:
     void latLonToXY(double lat, double lon);
 
 
-    QSerialPort* serial;
 
-    QNmeaPositionInfoSource* source;
+    QSerialPort* serial;
 
     QGeoCoordinate currentCoordinate;
 
