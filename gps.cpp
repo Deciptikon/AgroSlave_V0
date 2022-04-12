@@ -67,24 +67,6 @@ void GPS::write(const QByteArray &bytes)
     serial->write(b);
 }
 
-void GPS::positionUpdate(QGeoPositionInfo info)
-{
-    qDebug() << "SIGNAL(positionUpdate)";
-
-    currentCoordinate = info.coordinate();
-    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
-
-    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
-    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
-
-    QGeoCoordinate c = info.coordinate();
-    double lat = c.latitude();
-    double lon = c.longitude();
-    emit updatePositionGeo(c);
-    emit updatePositionXY(this->x, this->y);
-    emit updatePositionLatLon(lat, lon);
-}
-
 void GPS::readPort()
 {
     //qDebug() << "SerialPort: SIGNAL(readyRead())";
@@ -105,9 +87,6 @@ void GPS::readPort()
                     messageCurrent.clear();
                     messageCurrent = messageBuffer;
                     emit parseMessage();
-                    //qDebug() << " ";
-                    //qDebug() << messageBuffer.toHex() << "  |  size =" << messageBuffer.size();
-                    //qDebug() << ".................................. ";
                 }
                 messageBuffer.clear();
             }
@@ -146,24 +125,24 @@ void GPS::ubxParser()
         return;
     }
 
-    qDebug() << "Data is valid";
+    //qDebug() << "Data is valid";
     data.remove(0,4);// delete class & id &  2 bite length payload
 
     double lon = ((data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4]);
     lon = lon * 0.0000001;
     double lat = ((data[11]<< 24) + (data[10]<< 16) + (data[9] << 8) + data[8]);
     lat = lat * 0.0000001;
-    qDebug() << "Latitude:" << QString::number(lat, 'd', 7) << "\tLongitude:" << QString::number(lon, 'd', 7);
+    //qDebug() << "Latitude:" << QString::number(lat, 'd', 7) << "\tLongitude:" << QString::number(lon, 'd', 7);
 
-//    currentCoordinate.setLatitude(lat);
-//    currentCoordinate.setLongitude(lon);
-//    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
+    currentCoordinate.setLatitude(lat);
+    currentCoordinate.setLongitude(lon);
+    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
 
-//    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
-//    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
+    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
+    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
 
-//    emit updatePositionXY(this->x, this->y);
-//    emit updatePositionLatLon(lat, lon);
+    emit updatePositionXY(this->x, this->y);
+    emit updatePositionLatLon(lat, lon);
 }
 
 void GPS::latLonToXY(double lat, double lon)

@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QSerialPort>
 #include <QGeoPositionInfoSource>
-//#include <QNmeaPositionInfoSource>
 #include <QtMath>
 #include <QTimer>
 
@@ -35,7 +34,6 @@ public slots:
     void write(const QByteArray &bytes);
 
 private slots:
-    void positionUpdate(QGeoPositionInfo info);
     void readPort();
     void ubxParser();
 private:
