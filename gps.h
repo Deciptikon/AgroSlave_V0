@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QSerialPort>
 #include <QGeoPositionInfoSource>
-#include <QNmeaPositionInfoSource>
+//#include <QNmeaPositionInfoSource>
 #include <QtMath>
 #include <QTimer>
 
@@ -28,6 +28,7 @@ signals:
     void updatePositionLatLon(double &Lat, double &Lon);
 
     void readyRead(const QByteArray &bytes);
+    void parseMessage();
 
 public slots:
     void init();
@@ -36,13 +37,16 @@ public slots:
 private slots:
     void positionUpdate(QGeoPositionInfo info);
     void readPort();
-    void ubxParser(const QByteArray &bytes);
+    void ubxParser();
 private:
     void latLonToXY(double lat, double lon);
 
 
 
     QSerialPort* serial;
+
+    QByteArray messageBuffer;
+    QByteArray messageCurrent;
 
     QGeoCoordinate currentCoordinate;
 

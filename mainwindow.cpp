@@ -27,13 +27,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     ///-------Create GPS-reader----------------------------------------------------------------------
-    gps = new GPS(this);
-    gps->init();
+    gps = new GPS();
+    //gps->init();
     //gps->setMsecUpdate(100);
 
     threadGPS = new QThread(this);
 
     gps->moveToThread(threadGPS);
+    connect(threadGPS, SIGNAL(started()), gps, SLOT(init()));
     ///----------------------------------------------------------------------------------------------
 
 

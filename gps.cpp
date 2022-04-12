@@ -3,6 +3,9 @@
 GPS::GPS(QObject *parent) : QObject(parent)
 {
     msecUpdate = 1000;
+
+    //если сообщение готово с координатами получено - читаем из него координаты
+    connect(this, SIGNAL(parseMessage()), this, SLOT(ubxParser()) );
 }
 
 void GPS::setMsecUpdate(size_t value)
@@ -20,7 +23,7 @@ void GPS::init()
     serial = new QSerialPort();
     serial->setPortName("ttyUSB0");//"ttyACM0"
     serial->open(QIODevice::ReadWrite);
-    serial->setBaudRate(QSerialPort::Baud9600);
+    serial->setBaudRate(QSerialPort::Baud38400);//Baud9600
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
     serial->setStopBits(QSerialPort::OneStop);
@@ -32,7 +35,6 @@ void GPS::init()
     if(serial->isOpen()) {
         qDebug() << "SerialPort is open";
         connect(serial, SIGNAL(readyRead()), this, SLOT(readPort()));
-        connect(this, SIGNAL(readyRead(const QByteArray &)), this, SLOT(ubxParser(const QByteArray &)));
     } else {
         qDebug() << "SerialPort is not open";
         //Если порт не открыт, попытка через 100мс открыть его снова
@@ -86,44 +88,79 @@ void GPS::positionUpdate(QGeoPositionInfo info)
 void GPS::readPort()
 {
     //qDebug() << "SerialPort: SIGNAL(readyRead())";
-    if(!serial->canReadLine()) {
+
+    if(serial->bytesAvailable() == 0) {
+        qDebug() << "SerialPort null data";
         return;
     }
 
     QByteArray bytes;
     bytes = serial->readLine();
 
-    if(bytes.isEmpty()) {
-        qDebug() << "SerialPort read not data";
-        return;
+    if(bytes.length()>0) {
+
+        for(auto b: bytes) {
+            if((uchar)b == 0xb5) {
+                if(messageBuffer.size() == 36) {
+                    messageCurrent.clear();
+                    messageCurrent = messageBuffer;
+                    emit parseMessage();
+                    //qDebug() << " ";
+                    //qDebug() << messageBuffer.toHex() << "  |  size =" << messageBuffer.size();
+                    //qDebug() << ".................................. ";
+                }
+                messageBuffer.clear();
+            }
+            messageBuffer.append(b);
+        }
+        emit readyRead(bytes);//сигнал прочитанной строкой
     }
-
-//    QString s="";
-//    for(auto b: bytes) {
-//        s.append(b);
-//    }
-//    qDebug() << "SerialPort read: " << s;
-
-    emit readyRead(bytes);//сигнал прочитанной строкой
 }
 
-void GPS::ubxParser(const QByteArray &bytes)
+void GPS::ubxParser()
 {
-    if(bytes.isEmpty()) {
+    if(messageCurrent.isEmpty()) {
         return;
     }
-    //парсим здесь
-    //потом currentCoordinate.setLatitude(...); ...
+    if(messageCurrent.size() != 36) {
+        return;
+    }
 
+    uint8_t chA = 0, chB = 0;
+    QByteArray data = messageCurrent;
+    data.remove(34,2);// delete check summ: checkA checkB
+    data.remove(0,2); // delete header: 0xB5 0x62
+    //qDebug() << "Data size" << data.size();
 
+    for(uint8_t b: data) {
+        chA += b;
+        chB += chA;
+        //qDebug() << "  chA =" << chA << "\t chB =" << chB;
+    }
 
+    uint8_t mA = (uint8_t)messageCurrent.at(34);
+    uint8_t mB = (uint8_t)messageCurrent.at(35);
+
+    if(chA - mA || chB - mB ) {
+        qDebug() << "Data invalid";
+        return;
+    }
+
+    qDebug() << "Data is valid";
+    data.remove(0,4);// delete class & id &  2 bite length payload
+
+    double lon = ((data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4]);
+    lon = lon * 0.0000001;
+    double lat = ((data[11]<< 24) + (data[10]<< 16) + (data[9] << 8) + data[8]);
+    lat = lat * 0.0000001;
+    qDebug() << "Latitude:" << QString::number(lat, 'd', 7) << "\tLongitude:" << QString::number(lon, 'd', 7);
+
+//    currentCoordinate.setLatitude(lat);
+//    currentCoordinate.setLongitude(lon);
 //    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
 
 //    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
 //    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
-
-//    double lat = currentCoordinate.latitude();
-//    double lon = currentCoordinate.longitude();
 
 //    emit updatePositionXY(this->x, this->y);
 //    emit updatePositionLatLon(lat, lon);
