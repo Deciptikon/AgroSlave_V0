@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
     ///-------Connects objects-----------------------------------------------------------------------
     connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
             autopilot, SLOT(readFromGPS(const double&, const double&)) );
-    connect(gps, SIGNAL(updatePositionLatLon(double&, double&)),
-            this, SLOT(updateLabelLatLon(double&, double&)) );
+    connect(gps, SIGNAL(updatePositionLatLon(const double&, const double&)),
+            this, SLOT(updateLabelLatLon(const double&, const double&)) );
     //connect(ui->bt_send_read_command, SIGNAL(clicked()), slavecontroller_14, SLOT(writeData()));
     connect(autopilot, SIGNAL(sendCommandToSlave14(int&)), controlleri2c_14, SLOT(writeData(int&)));
     ///----------------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ MainWindow::~MainWindow()
     delete threadControllerI2C_14;
 }
 
-void MainWindow::updateLabelLatLon(double &lat, double &lon)
+void MainWindow::updateLabelLatLon(const double &lat, const double &lon)
 {
     this->ui->lb_latitude->setText( QString::number(lat, 'd', 7));
     this->ui->lb_longitude->setText(QString::number(lon, 'd', 7));

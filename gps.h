@@ -24,7 +24,7 @@ public:
 signals:
     void updatePositionGeo(QGeoCoordinate &coord);
     void updatePositionXY(const double &x, const double &y);
-    void updatePositionLatLon(double &Lat, double &Lon);
+    void updatePositionLatLon(const double &lat, const double &lon);
 
     void readyRead(const QByteArray &bytes);
     void parseMessage();

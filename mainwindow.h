@@ -23,7 +23,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void updateLabelLatLon(double &lat, double &lon);
+    void updateLabelLatLon(const double &lat, const double &lon);
 
     void on_bt_restate_relay_clicked();
 
