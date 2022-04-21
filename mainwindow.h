@@ -22,6 +22,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void updateLabelLatLon(double &lat, double &lon);
+
+    void on_bt_restate_relay_clicked();
+
 private:
     Ui::MainWindow *ui;
 

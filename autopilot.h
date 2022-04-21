@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDebug>
 #include <QtMath>
+#include <QList>
+#include <QVector2D>
 #include <QVector3D>
 
 class Autopilot : public QObject
@@ -26,12 +28,17 @@ public slots:
 
     void readFromGPS(const double &x, const double &y);
 
+    void createListPoint();
+
 private slots:
 
 private:
     int msecDeltaTime;
 
     bool stateRelay; //состояние реле подруливающего устройства
+
+    QVector2D direct;//направление перемещения, единичный вектор
+    QList<QVector2D> listPoint2D;
 };
 
 #endif // AUTOPILOT_H

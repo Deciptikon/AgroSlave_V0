@@ -4,7 +4,7 @@ GPS::GPS(QObject *parent) : QObject(parent)
 {
     msecUpdate = 1000;
 
-    //если сообщение готово с координатами получено - читаем из него координаты
+    //если сообщение с координатами получено - читаем из него координаты
     connect(this, SIGNAL(parseMessage()), this, SLOT(ubxParser()) );
 }
 
