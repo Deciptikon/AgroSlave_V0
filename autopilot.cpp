@@ -101,6 +101,8 @@ void Autopilot::createListPoint()
 //    listPoint2D.append({7,8});
 //    listPoint2D.append({9,10});
 
+    // поворачивает вектор vec на угол angle (в радианах) против часовой
+    // и возврвщвет вектор
     auto rotate = [](QVector2D vec, float angle) -> QVector2D {
         if(vec.isNull()) {
             return vec;
@@ -126,13 +128,13 @@ void Autopilot::createListPoint()
     listPoint2D.append( pos + dist*direction.normalized() );
 
     //вторая точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI / 2.0) );
 
     //третья точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI ) );
 
     //четвертая точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI * 3.0/2.0) );
     //квадрат.
 }
 
