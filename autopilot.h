@@ -41,7 +41,7 @@ private:
     double xOrigin = 0;//локальныая система координат
     double yOrigin = 0;
 
-    QVector2D direction;//направление перемещения, единичный вектор
+    QVector2D direction;//направление перемещения
     QVector2D directionToPoint;
 
     QList<QVector2D> path2D;

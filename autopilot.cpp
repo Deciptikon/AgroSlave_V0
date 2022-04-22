@@ -72,7 +72,7 @@ void Autopilot::loop()
         }
     }
     qDebug() << "CommandToSlave:" << comm;
-    sendCommandToSlave14(comm);
+    emit sendCommandToSlave14(comm);
 
 }
 
@@ -95,12 +95,45 @@ void Autopilot::readFromGPS(const double &x, const double &y)
 
 void Autopilot::createListPoint()
 {
-    //f(direction)
-    listPoint2D.append({1,2});
-    listPoint2D.append({3,4});
-    listPoint2D.append({5,6});
-    listPoint2D.append({7,8});
-    listPoint2D.append({9,10});
+//    listPoint2D.append({1,2});
+//    listPoint2D.append({3,4});
+//    listPoint2D.append({5,6});
+//    listPoint2D.append({7,8});
+//    listPoint2D.append({9,10});
+
+    auto rotate = [](QVector2D vec, float angle) -> QVector2D {
+        if(vec.isNull()) {
+            return vec;
+        }
+
+        QVector2D ortho{ vec.y(), -vec.x()};
+        QVector2D rot = vec*cos(angle) - ortho*sin(angle);
+
+        return rot;
+    };
+
+    if(path2D.isEmpty()) {
+        return;
+    }
+    if(direction.isNull()) {
+        return;
+    }
+
+    QVector2D pos = path2D.last();//текущее положение
+    float dist = 20; //растояние в метрах
+
+    //первая точка: в 20 метрах спереди
+    listPoint2D.append( pos + dist*direction.normalized() );
+
+    //вторая точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+
+    //третья точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+
+    //четвертая точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI/2.0) );
+    //квадрат.
 }
 
 int Autopilot::getMSecDeltaTime() const
@@ -113,6 +146,6 @@ void Autopilot::restateRelay()
     stateRelay = !stateRelay;
     qDebug() << "Состояние реле изменено на " << stateRelay;
 
-    int c='c';
+    int c=120;
     emit sendCommandToSlave14(c);
 }
