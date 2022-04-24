@@ -129,20 +129,18 @@ void GPS::ubxParser()
     data.remove(0,4);// delete class & id &  2 bite length payload
 
     double lon = ((data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4]);
-    lon = lon * 0.0000001;
+    this->lon = lon * 0.0000001;
     double lat = ((data[11]<< 24) + (data[10]<< 16) + (data[9] << 8) + data[8]);
-    lat = lat * 0.0000001;
+    this->lat = lat * 0.0000001;
     //qDebug() << "Latitude:" << QString::number(lat, 'd', 7) << "\tLongitude:" << QString::number(lon, 'd', 7);
 
-    currentCoordinate.setLatitude(lat);
-    currentCoordinate.setLongitude(lon);
-    latLonToXY(currentCoordinate.latitude(), currentCoordinate.longitude());
+    latLonToXY(this->lat, this->lon);
 
-    qDebug() << "coord.latitude(): " << QString::number(currentCoordinate.latitude(), 'g', 9);
-    qDebug() << "coord.longitude(): " << QString::number(currentCoordinate.longitude(), 'g', 9);
+    qDebug() << "coord.latitude(): " << QString::number(this->lat, 'g', 9);
+    qDebug() << "coord.longitude(): " << QString::number(this->lon, 'g', 9);
 
     emit updatePositionXY(this->x, this->y);
-    emit updatePositionLatLon(lat, lon);
+    emit updatePositionLatLon(this->lat, this->lon);
 }
 
 void GPS::latLonToXY(double lat, double lon)

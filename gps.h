@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDebug>
 #include <QSerialPort>
-#include <QGeoPositionInfoSource>
 #include <QtMath>
 #include <QTimer>
 
@@ -22,7 +21,6 @@ public:
 
 
 signals:
-    void updatePositionGeo(QGeoCoordinate &coord);
     void updatePositionXY(const double &x, const double &y);
     void updatePositionLatLon(const double &lat, const double &lon);
 
@@ -46,7 +44,8 @@ private:
     QByteArray messageBuffer;
     QByteArray messageCurrent;
 
-    QGeoCoordinate currentCoordinate;
+    double lat;
+    double lon;
 
     double x,y;
 
