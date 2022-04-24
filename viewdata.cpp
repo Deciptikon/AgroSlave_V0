@@ -38,3 +38,14 @@ void ViewData::acceptCoord(const double &x, const double &y)
     setXCord(x);
     setYCord(y);
 }
+
+void ViewData::slotCreateListPoint()
+{
+    //qDebug() << "void ViewData::slotCreateListPoint()";
+    emit signalCreateListPoint();
+}
+
+void ViewData::slotCommandToSlave14(int &comm)
+{
+    emit signalCommandToSlave14(comm);
+}

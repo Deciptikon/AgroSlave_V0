@@ -2,6 +2,7 @@
 #define VIEWDATA_H
 
 #include <QObject>
+#include <QDebug>
 
 class ViewData : public QObject
 {
@@ -27,8 +28,14 @@ signals:
     void yCordChanged();
     void yCordChanged(double y);
 
+    void signalCreateListPoint();
+    void signalCommandToSlave14(int &comm);
+
 public slots:
     void acceptCoord(const double &x, const double &y);
+    void slotCreateListPoint();
+    void slotCommandToSlave14(int &comm);
+    //void sendCommandToSlave14();
 
 private:
     double m_xCord;

@@ -8,7 +8,7 @@
 #include <viewdata.h>
 #include "autopilot.h"
 #include "gps.h"
-//#include "controlleri2c.h"
+#include "controlleri2c.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +26,9 @@ int main(int argc, char *argv[])
 
     GPS *gps;
     QThread *threadGPS;
+
+    ControllerI2C *controlleri2c_14;
+    QThread *threadControllerI2C_14;
 
 
     ///-------Create autopilot and move to thread with timer----------------------------------------
@@ -60,29 +63,26 @@ int main(int argc, char *argv[])
 
 
 
-//    ///-------Create I2C slave device----------------------------------------------------------------
-//    controlleri2c_14 = new ControllerI2C();
-//    controlleri2c_14->init( 0x14 );
+    ///-------Create I2C slave device----------------------------------------------------------------
+    controlleri2c_14 = new ControllerI2C();
+    controlleri2c_14->init( 0x14 );
 
-//    threadControllerI2C_14 = new QThread(this);
-//    controlleri2c_14->moveToThread(threadControllerI2C_14);
-//    ///----------------------------------------------------------------------------------------------
+    threadControllerI2C_14 = new QThread();
+    controlleri2c_14->moveToThread(threadControllerI2C_14);
+    ///----------------------------------------------------------------------------------------------
 
 
 
     ///-------Connects objects-----------------------------------------------------------------------
     autopilot->connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
                                   SLOT(readFromGPS(const double&, const double&)) );
-//    connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
-//            autopilot, SLOT(readFromGPS(const double&, const double&)) );
+    autopilot->connect(&viewData, SIGNAL(signalCreateListPoint()),
+                                  SLOT(createListPoint()) );
 
-//    connect(gps, SIGNAL(updatePositionLatLon(const double&, const double&)),
-//            this, SLOT(updateLabelLatLon(const double&, const double&)) );
-
-//    //connect(ui->bt_send_read_command, SIGNAL(clicked()), slavecontroller_14, SLOT(writeData()));
-
-//    controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(int&)),
-//                                         SLOT(writeData(int&)) );
+    controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(int&)),
+                                         SLOT(writeData(int&)) );
+    controlleri2c_14->connect(&viewData, SIGNAL(signalCommandToSlave14(int&)),
+                                         SLOT(writeData(int&)) );
 
     ///----------------------------------------------------------------------------------------------
 
@@ -93,10 +93,6 @@ int main(int argc, char *argv[])
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("ViewData", &viewData);
-    context->setContextProperty("Autopilot", autopilot);
-    context->setContextProperty("GPS", gps);
-    //context->setContextProperty("Device14", controlleri2c_14);
-
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -109,7 +105,7 @@ int main(int argc, char *argv[])
     ///-------Start threads--------------------------------------------------------------------------
     threadAutopilot->start();
     threadGPS->start();
-//    threadControllerI2C_14->start();
+    threadControllerI2C_14->start();
     ///----------------------------------------------------------------------------------------------
 
 

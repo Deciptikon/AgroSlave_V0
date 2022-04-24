@@ -6,11 +6,11 @@ CONFIG += c++11
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#LIBS += -lwiringPi
+LIBS += -lwiringPi
 
 SOURCES += \
         autopilot.cpp \
-        #controlleri2c.cpp \
+        controlleri2c.cpp \
         gps.cpp \
         main.cpp \
         viewdata.cpp
@@ -30,6 +30,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     autopilot.h \
-    #controlleri2c.h \
+    controlleri2c.h \
     gps.h \
     viewdata.h
