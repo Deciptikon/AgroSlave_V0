@@ -82,6 +82,7 @@ void Autopilot::readFromGPS(const double &x, const double &y)
     if(!isOrigin) {
         xOrigin = x;
         yOrigin = y;
+        isOrigin = true;
     }
 
     float xp = x - xOrigin;
@@ -130,6 +131,8 @@ void Autopilot::createListPoint()
 
     QVector2D pos = path2D.last();//текущее положение
     float dist = 20; //растояние в метрах
+
+    listPoint2D.clear();
 
     //первая точка: в 20 метрах спереди
     listPoint2D.append( pos + dist*direction.normalized() );

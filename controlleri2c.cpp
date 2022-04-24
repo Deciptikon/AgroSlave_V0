@@ -40,7 +40,7 @@ void ControllerI2C::readData()
 //    }
 }
 
-void ControllerI2C::writeData(int &data)
+void ControllerI2C::writeData(const int &data)
 {
     if (this->deviceRegAdress == -1) {
         qDebug() << "[SlaveController::loop()] deviceRegAdress == -1";

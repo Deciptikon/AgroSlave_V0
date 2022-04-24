@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    ViewData viewData;//данные для отображения
+    ViewData viewData;//модель с данными для отображения
 
     Autopilot *autopilot;
     QThread *threadAutopilot;
@@ -79,10 +79,10 @@ int main(int argc, char *argv[])
     autopilot->connect(&viewData, SIGNAL(signalCreateListPoint()),
                                   SLOT(createListPoint()) );
 
-    controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(int&)),
-                                         SLOT(writeData(int&)) );
-    controlleri2c_14->connect(&viewData, SIGNAL(signalCommandToSlave14(int&)),
-                                         SLOT(writeData(int&)) );
+    controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(const int&)),
+                                         SLOT(writeData(const int&)) );
+    controlleri2c_14->connect(&viewData, SIGNAL(signalCommandToSlave14(const int&)),
+                                         SLOT(writeData(const int&)) );
 
     ///----------------------------------------------------------------------------------------------
 

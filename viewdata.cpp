@@ -45,7 +45,7 @@ void ViewData::slotCreateListPoint()
     emit signalCreateListPoint();
 }
 
-void ViewData::slotCommandToSlave14(int &comm)
+void ViewData::slotCommandToSlave14(int comm)
 {
     emit signalCommandToSlave14(comm);
 }

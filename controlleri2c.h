@@ -20,7 +20,7 @@ signals:
 
 public slots:
     void readData();
-    void writeData(int &data);
+    void writeData(const int &data);
 
 private:
     int hexAdress;

@@ -29,13 +29,13 @@ signals:
     void yCordChanged(double y);
 
     void signalCreateListPoint();
-    void signalCommandToSlave14(int &comm);
+    void signalCommandToSlave14(const int &comm);
 
 public slots:
     void acceptCoord(const double &x, const double &y);
+
     void slotCreateListPoint();
-    void slotCommandToSlave14(int &comm);
-    //void sendCommandToSlave14();
+    void slotCommandToSlave14(int comm);
 
 private:
     double m_xCord;

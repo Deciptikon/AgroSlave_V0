@@ -21,7 +21,7 @@ public:
     void restateRelay();
 
 signals:
-    void sendCommandToSlave14(int &comm);
+    void sendCommandToSlave14(const int &comm);
 
 public slots:
     void loop();
