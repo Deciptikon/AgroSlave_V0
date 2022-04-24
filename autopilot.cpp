@@ -32,7 +32,7 @@ void Autopilot::loop()
     //update velocity, direct and translate
     //here calculate drive
 
-    //derection = (last position - penultimate position) and normalized
+    //direction = (last position - penultimate position) and normalized
     direction = path2D.last() - *(----path2D.end());
     QVector2D orthogonal{ direction.y(), -direction.x()};
     qDebug() << "direction:" << direction;
@@ -123,6 +123,8 @@ void Autopilot::createListPoint()
 
     QVector2D pos = path2D.last();//текущее положение
     float dist = 20; //растояние в метрах
+
+    listPoint2D.clear();
 
     //первая точка: в 20 метрах спереди
     listPoint2D.append( pos + dist*direction.normalized() );

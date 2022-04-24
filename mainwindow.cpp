@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
             autopilot, SLOT(readFromGPS(const double&, const double&)) );
     connect(gps, SIGNAL(updatePositionLatLon(const double&, const double&)),
             this, SLOT(updateLabelLatLon(const double&, const double&)) );
-    //connect(ui->bt_send_read_command, SIGNAL(clicked()), slavecontroller_14, SLOT(writeData()));
+    connect(ui->bt_create_list_point, SIGNAL(clicked()), autopilot, SLOT(createListPoint()));
     connect(autopilot, SIGNAL(sendCommandToSlave14(int&)), controlleri2c_14, SLOT(writeData(int&)));
     ///----------------------------------------------------------------------------------------------
 
