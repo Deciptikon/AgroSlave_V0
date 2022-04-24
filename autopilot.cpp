@@ -20,7 +20,7 @@ void Autopilot::init(const int msecDeltaTime)
 void Autopilot::loop()
 {
     qDebug() << "void Autopilot::loop()";
-
+    qDebug() << "threadAutopilot:" << this->thread();
 
     if(path2D.isEmpty()) {
         return;

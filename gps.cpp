@@ -20,6 +20,7 @@ void GPS::setMsecUpdate(size_t value)
 
 void GPS::init()
 {
+    qDebug() << "threadGPS:" << this->thread();
     serial = new QSerialPort();
     serial->setPortName("ttyUSB0");//"ttyACM0"
     serial->open(QIODevice::ReadWrite);
