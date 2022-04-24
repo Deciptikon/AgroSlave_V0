@@ -12,7 +12,8 @@ SOURCES += \
         autopilot.cpp \
         #controlleri2c.cpp \
         gps.cpp \
-        main.cpp
+        main.cpp \
+        viewdata.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,4 +31,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     autopilot.h \
     #controlleri2c.h \
-    gps.h
+    gps.h \
+    viewdata.h

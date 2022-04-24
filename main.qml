@@ -7,19 +7,44 @@ Window {
     visible: true
     title: qsTr("Hello World")
 
+    Connections {
+        target: ViewData
+
+        function onXCordChanged(x) {
+                textX.text = "X = " + x
+            }
+
+        function onYCordChanged(y) {
+                textY.text = "Y = " + y
+            }
+    }
+
 
     Rectangle {
-        id: rect
-        width: 200
-        height: width/2
-        anchors.centerIn: parent
-        color: "blue"
+        id: textCord
+        width: 300
+        height: width/4
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
         Text {
-            id: textRect
-            text: qsTr("Custom text")
-            color: "white"
-            anchors.centerIn: parent
+            id: textX
+            text: qsTr("None")
+            color: "orange"
+            font.pointSize: 18
+            anchors.top: parent.top
+
+        }
+        Text {
+            id: textY
+            text: qsTr("None")
+            color: "orange"
+            font.pointSize: 18
+            anchors.bottom: parent.bottom
+
         }
 
     }
+
 }

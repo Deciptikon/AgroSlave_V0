@@ -1,9 +1,11 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include <QObject>
 #include <QThread>
 #include <QTimer>
+#include <viewdata.h>
 #include "autopilot.h"
 #include "gps.h"
 //#include "controlleri2c.h"
@@ -15,6 +17,8 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+
+    ViewData viewData;//данные для отображения
 
     Autopilot *autopilot;
     QThread *threadAutopilot;
@@ -49,6 +53,9 @@ int main(int argc, char *argv[])
 
     gps->moveToThread(threadGPS);
     gps->connect(threadGPS, SIGNAL(started()), SLOT(init()) );
+
+    viewData.connect(gps, SIGNAL(updatePositionXY(const double&, const double&)),
+                     SLOT(acceptCoord(const double&, const double&)), Qt::QueuedConnection );
     ///----------------------------------------------------------------------------------------------
 
 
@@ -83,6 +90,14 @@ int main(int argc, char *argv[])
 
 
     QQmlApplicationEngine engine;
+
+    QQmlContext *context = engine.rootContext();
+    context->setContextProperty("ViewData", &viewData);
+    context->setContextProperty("Autopilot", autopilot);
+    context->setContextProperty("GPS", gps);
+    //context->setContextProperty("Device14", controlleri2c_14);
+
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
