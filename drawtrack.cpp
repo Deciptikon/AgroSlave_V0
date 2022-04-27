@@ -78,6 +78,8 @@ void DrawTrack::drawAxis(QPainter *painter)
         painter->drawText(QPointF{radius*m_zoom + 1, -5}, QString::number(radius));
     };
 
+    paintEllipse(1);
+    paintEllipse(5);
     paintEllipse(10);
     paintEllipse(25);
     paintEllipse(50);
@@ -139,7 +141,7 @@ void DrawTrack::drawKeypoint(QPainter *painter)
 
     painter->scale(m_zoom, m_zoom);
 
-    float r = 10;
+    float r = 2;
     for (auto p: qAsConst(m_keypoint)) {
         painter->drawEllipse(p.toPointF(), r, r);
     }
@@ -166,6 +168,7 @@ void DrawTrack::drawMouseEvent(QPainter *painter)
 
     float r = 20;
     painter->drawEllipse(mouseEvent, r, r);
+    painter->drawEllipse(mouseEvent, 2*r, 2*r);
 
     painter->restore();
 }

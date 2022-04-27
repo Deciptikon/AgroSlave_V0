@@ -22,7 +22,7 @@ void GPS::init()
 {
     qDebug() << "threadGPS:" << this->thread();
     serial = new QSerialPort();
-    serial->setPortName("COM4");//"ttyACM0"//"COM4"//"ttyUSB0"
+    serial->setPortName("ttyUSB0");//"ttyACM0"//"COM4"//"ttyUSB0"
     serial->open(QIODevice::ReadWrite);
     serial->setBaudRate(QSerialPort::Baud38400);//Baud9600
     serial->setDataBits(QSerialPort::Data8);

@@ -5,6 +5,7 @@ import QtQuick.Controls 2.12
 import DrawTrack 1.0
 
 Window {
+    id: window
     width: 640
     height: 480
     visible: true
@@ -23,12 +24,12 @@ Window {
         }
 
         //получаем обновленную траекторию для отображения в QML
-        function onPathChanged(path) {
+        function onPathToQML(path) {
             drawtrack.updatePath(path)
         }
 
         //ролучаем список ключевых точек для отображения в QML
-        function onKeyPointChanged(keypoints) {
+        function onKeyPointsToQML(keypoints) {
             drawtrack.updateKeyPoint(keypoints)
         }
 
@@ -59,7 +60,10 @@ Window {
 
     Button {//кнопка переключения центрирования
         id: swapbutton
-        anchors.bottom: drawtrack.bottom
+        y: 440
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenterOffset: 0
+        anchors.bottomMargin: 0
         anchors.horizontalCenter: parent.horizontalCenter
         text: "Centered"
         onClicked: drawtrack.swapCentered()
