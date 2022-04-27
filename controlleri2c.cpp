@@ -7,7 +7,6 @@ ControllerI2C::ControllerI2C(QObject *parent) : QObject(parent)
 
 void ControllerI2C::init(int hexAdress)
 {
-
     if(hexAdress>0x08 && hexAdress<0x80) {//0-128
         this->hexAdress = hexAdress;
     } else {

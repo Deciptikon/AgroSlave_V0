@@ -41,7 +41,6 @@ void GPS::init()
         //Если порт не открыт, попытка через 100мс открыть его снова
         QTimer::singleShot(100, this, SLOT(init()));
     }
-
 }
 
 void GPS::write(const QByteArray &bytes)
@@ -57,9 +56,8 @@ void GPS::write(const QByteArray &bytes)
         return;
     }
 
-    serial->write(bytes);
-
     if(*bytes.end() == '\n') {
+        serial->write(bytes);
         return;
     }
 

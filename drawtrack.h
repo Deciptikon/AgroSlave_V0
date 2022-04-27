@@ -77,8 +77,6 @@ protected: // QQuickItem interface
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 signals:
-    //
-
     void pathChanged();
 
     void keypointChanged();
@@ -97,7 +95,7 @@ signals:
 
     void isPaintAxisChanged();
 
-    void releaseCoordinate(const QPointF &coord);
+    void releaseCoordinate(const QVector2D &coord);
 
     void shiftCordChanged();
 
@@ -106,11 +104,6 @@ private:
     void drawPath(QPainter *painter);
     void drawKeypoint(QPainter *painter);
     void drawMouseEvent(QPainter *painter);//рисование области нажатия на дисплее
-
-
-    int count = 0;
-
-
 
     QTimer      *internalTimer;
 

@@ -12,7 +12,7 @@ DrawTrack::DrawTrack(QQuickItem *parent):
 {
     internalTimer = new QTimer(this);
     connect(internalTimer, &QTimer::timeout, [=](){
-        count++;
+        //здась можно что-то обновить
         update();
     } );
     internalTimer->start(m_msecUpdate);
@@ -86,8 +86,6 @@ void DrawTrack::drawAxis(QPainter *painter)
     paintEllipse(400);
 
 
-    //painter->drawText(QPointF{55,-25}, QString::number(count));/////////
-
     painter->restore();
 }
 
@@ -106,7 +104,7 @@ void DrawTrack::drawPath(QPainter *painter)
     }
 
     QPen penLine{Qt::NoBrush, m_widthPath/m_zoom, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin};
-    penLine.setColor(m_colorPath);//
+    penLine.setColor(m_colorPath);
     painter->save();
     painter->setPen(penLine);
 
@@ -161,9 +159,6 @@ void DrawTrack::drawMouseEvent(QPainter *painter)
         return;
     }
 
-//    QPen penEllipse;
-//    penEllipse.setColor(QColor(0,255,0));
-//    penEllipse.setWidth(2);
     QPen penLine{Qt::NoBrush, 2.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin};
     penLine.setColor(QColor(255,0,255));
     painter->save();
@@ -356,8 +351,14 @@ void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
         qDebug() <<" coord:" << event->pos();
         isPressed = false;
         mouseEvent = event->localPos();
+
+        QVector2D p;
+        p.setX((mouseEvent.x() - this->width() /2.0)/m_zoom  + m_shiftCord.x());
+        p.setY((mouseEvent.y() - this->height()/2.0)/m_zoom  + m_shiftCord.y());
+
+        emit releaseCoordinate(p);
+
         update();
-        emit releaseCoordinate(mouseEvent);
     }
 }
 

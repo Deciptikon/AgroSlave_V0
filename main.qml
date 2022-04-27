@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 
+import DrawTrack 1.0
+
 Window {
     width: 640
     height: 480
@@ -9,22 +11,106 @@ Window {
     title: qsTr("AgroSlave_V0")
 
     Connections {
+        // описываем реакцию на испущенные сигналы из слоя ViewData
         target: ViewData
 
+        // обновляем координаты на textview
         function onXCordChanged(x) {
-                textX.text = "X = " + x
-            }
-
+            textX.text = "X = " + x
+        }
         function onYCordChanged(y) {
-                textY.text = "Y = " + y
-            }
+            textY.text = "Y = " + y
+        }
+
+        //получаем обновленную траекторию для отображения в QML
+        function onPathChanged(path) {
+            drawtrack.updatePath(path)
+        }
+
+        //ролучаем список ключевых точек для отображения в QML
+        function onKeyPointChanged(keypoints) {
+            drawtrack.updateKeyPoint(keypoints)
+        }
+
     }
 
+    Connections {
+        // описываем реакцию на испущенные сигналы из итема drawtrack
+        target: drawtrack
+
+        function onReleaseCoordinate(point) {
+
+            // передаем координаты ключевой точки в слой ViewData
+            // который потом передаст их в автопилот, а тот
+            // в свою очередь обработает их и добавит в конец списка
+            // ключевых точек, и испустит сигнал с новым
+            // списком ключевых точек, которые получит слой ViewData
+            // и передаст их для отображения в QML drawtrack
+            ViewData.addKeyPointFromQML(point)
+        }
+    }
+
+    DrawTrack {
+        id: drawtrack
+        anchors.fill: parent
+        anchors.centerIn:  parent
+
+    }
+
+    Button {//кнопка переключения центрирования
+        id: swapbutton
+        anchors.bottom: drawtrack.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "Centered"
+        onClicked: drawtrack.swapCentered()
+    }
+
+    Rectangle {//итем изменения масштаба
+        id: zoomItem
+        anchors.right:  parent.right
+        anchors.top:  parent.top
+        anchors.rightMargin: 10
+        anchors.topMargin: 20
+        color: "#ddffdd"
+        width: 50
+        height: 100
+
+        Text {//текущая величина масштаба
+            id: currentZoom
+            anchors.centerIn: parent
+            text: qsTr(drawtrack.getZoom())
+        }
+
+        Button {//приближение
+            id: zoomIn
+            anchors.top:  parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: parent.height/3
+            text: "+"
+            onClicked: {
+                drawtrack.zoomIn()
+                currentZoom.text = qsTr(drawtrack.getZoom())
+            }
+        }
+
+        Button {//отдаление
+            id: zoomOut
+            anchors.bottom:  parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: parent.height/3
+            text: "-"
+            onClicked: {
+                drawtrack.zoomOut()
+                currentZoom.text = qsTr(drawtrack.getZoom())
+            }
+        }
 
 
+    }
 
-
-    Rectangle {
+    Rectangle {//отображение текущих координат по X и Y
         id: textCord
         width: 200
         height: width/4
@@ -57,7 +143,7 @@ Window {
 
     }
 
-    Button {
+    Button {// переключение реле
         id: btRestateRelay
         text: "ON|OFF Relay"
         width: textCord.width

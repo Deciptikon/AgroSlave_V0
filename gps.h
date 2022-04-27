@@ -19,7 +19,6 @@ public:
 
     void setMsecUpdate(size_t msec);
 
-
 signals:
     void updatePositionXY(const double &x, const double &y);
     void updatePositionLatLon(const double &lat, const double &lon);
@@ -36,8 +35,6 @@ private slots:
     void ubxParser();
 private:
     void latLonToXY(double lat, double lon);
-
-
 
     QSerialPort* serial;
 

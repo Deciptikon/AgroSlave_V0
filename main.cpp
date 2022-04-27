@@ -36,10 +36,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("ViewData", &viewData);
+    context->setContextProperty("ViewData", &viewData);//добавляем в контекст
 
-    qmlRegisterType<DrawTrack>("DrawTrack",1,0,"DrawTrack");
-    qRegisterMetaType<ListVector>("ListVector");
+    qmlRegisterType<DrawTrack>("DrawTrack",1,0,"DrawTrack");//регистрируем
+    qRegisterMetaType<ListVector>("ListVector");// в метаобъектной системе
 
 
     ///-------Create autopilot and move to thread with timer----------------------------------------
@@ -52,7 +52,10 @@ int main(int argc, char *argv[])
     timerAutopilot->setInterval(autopilot->getMSecDeltaTime());
     timerAutopilot->moveToThread(threadAutopilot);
 
+    // вызываем слот loop() по таймеру
     autopilot->connect( timerAutopilot, SIGNAL(timeout()), SLOT(loop()), Qt::ConnectionType::DirectConnection);
+
+    // запускаем таймер как только поток стартует
     timerAutopilot->connect(threadAutopilot, SIGNAL(started()), SLOT(start()));
     ///----------------------------------------------------------------------------------------------
 
@@ -64,8 +67,12 @@ int main(int argc, char *argv[])
     threadGPS = new QThread();
 
     gps->moveToThread(threadGPS);
+
+    // инициализируем gps как serialport device как только поток стартует
     gps->connect(threadGPS, SIGNAL(started()), SLOT(init()) );
 
+    // изменение координат передаются в viewData для дальнейшего отображения
+    // например как пары чисел
     viewData.connect(gps, SIGNAL(updatePositionXY(const double&, const double&)),
                      SLOT(acceptCoord(const double&, const double&)), Qt::QueuedConnection );
     ///----------------------------------------------------------------------------------------------
@@ -83,18 +90,29 @@ int main(int argc, char *argv[])
 
 
     ///-------Connects objects-----------------------------------------------------------------------
+
+    // связываем обновление положения в автопилоте с чтением положения в gps
     autopilot->connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
                                   SLOT(readFromGPS(const double&, const double&)) );
+
+    // получаем ключевую точку в автопилот из viewData (полученную из QML)
+    // для добавления в список ключевых точек
     autopilot->connect(&viewData, SIGNAL(sendKeyPointForAdding(const QVector2D&)),
                                   SLOT(addKeyPoint(const QVector2D&)) );
 
+    // изменение пути и ключевых точек в автопилоте передаются в viewData
+    // для дальнейшего отображения
     viewData.connect(autopilot, SIGNAL(pathChanged(const ListVector&)),
                                 SLOT(acceptPath(const ListVector&)) );
     viewData.connect(autopilot, SIGNAL(keyPointsChanged(const ListVector&)),
                                 SLOT(acceptKeyPoints(const ListVector&)) );
 
+    // даем возможность автопилоту отправлять данные через I2C на устройство 14
     controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(const int&)),
                                          SLOT(writeData(const int&)) );
+
+    // даем возможность из QML-->viewData отправлять данные через I2C на устройство 14
+    // например по кнопке
     controlleri2c_14->connect(&viewData, SIGNAL(signalCommandToSlave14(const int&)),
                                          SLOT(writeData(const int&)) );
 
