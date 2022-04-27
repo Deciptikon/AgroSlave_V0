@@ -60,11 +60,10 @@ Window {
 
     Button {//кнопка переключения центрирования
         id: swapbutton
-        y: 440
         anchors.bottom: parent.bottom
-        anchors.horizontalCenterOffset: 0
         anchors.bottomMargin: 0
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: 0
         text: "Centered"
         onClicked: drawtrack.swapCentered()
     }
@@ -76,8 +75,8 @@ Window {
         anchors.rightMargin: 10
         anchors.topMargin: 20
         color: "#ddffdd"
-        width: 50
-        height: 100
+        width: 80
+        height: 240
 
         Text {//текущая величина масштаба
             id: currentZoom
@@ -116,7 +115,7 @@ Window {
 
     Rectangle {//отображение текущих координат по X и Y
         id: textCord
-        width: 200
+        width: 250
         height: width/4
         anchors.top: parent.top
         anchors.topMargin: 20
@@ -127,7 +126,7 @@ Window {
         Text {
             id: textX
             text: qsTr("None")
-            color: "orange"
+            color: "blue"
             font.pointSize: 14
             anchors.top: parent.top
             anchors.topMargin: 5
@@ -137,7 +136,7 @@ Window {
         Text {
             id: textY
             text: qsTr("None")
-            color: "orange"
+            color: "blue"
             font.pointSize: 14
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
@@ -150,11 +149,11 @@ Window {
     Button {// переключение реле
         id: btRestateRelay
         text: "ON|OFF Relay"
-        width: textCord.width
+        width: textCord.width/2
         height: width/4
         anchors.top: textCord.bottom //btCreateListPoint.bottom
         anchors.topMargin: 20
-        anchors.horizontalCenter: textCord.horizontalCenter //parent.horizontalCenter
+        anchors.left: textCord.left //parent.horizontalCenter
         highlighted: true
         onClicked: {
             ViewData.slotCommandToSlave14(120)

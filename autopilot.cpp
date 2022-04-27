@@ -19,7 +19,7 @@ void Autopilot::init(const int msecDeltaTime)
 void Autopilot::loop()
 {
     qDebug() << "void Autopilot::loop()";
-    qDebug() << "threadAutopilot:" << this->thread();
+    //qDebug() << "threadAutopilot:" << this->thread();
 
     if(path2D.isEmpty()) {
         return;
@@ -80,7 +80,7 @@ void Autopilot::loop()
 
 void Autopilot::readFromGPS(const double &x, const double &y)
 {
-    qDebug() << "Autopilot::readFromGPS(double &x, double &y)" << x << "\t |" << y;
+    //qDebug() << "Autopilot::readFromGPS(double &x, double &y)" << x << "\t |" << y;
     if(!isOrigin) {
         xOrigin = x;
         yOrigin = y;

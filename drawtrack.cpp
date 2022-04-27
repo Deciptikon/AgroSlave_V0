@@ -6,7 +6,7 @@ DrawTrack::DrawTrack(QQuickItem *parent):
     m_widthPath(2),
     m_colorPath(255,0,0),
     m_isCenteredLastPoint(false),
-    m_msecUpdate(50),
+    m_msecUpdate(100),
     m_isPaintAxis(true),
     m_shiftCord(0,0)
 {
@@ -39,7 +39,7 @@ void DrawTrack::updatePath(const ListVector path)
 
 void DrawTrack::updateKeyPoint(const ListVector points)
 {
-    qDebug() << "keypoints ---> " << m_keypoint;
+    //qDebug() << "keypoints ---> " << m_keypoint;
     setKeypoint(points);
 }
 
@@ -351,7 +351,7 @@ void DrawTrack::mouseMoveEvent(QMouseEvent *event)
 void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::MouseButton::LeftButton) {
-        qDebug() <<" coord:" << event->pos();
+        //qDebug() <<" coord:" << event->pos();
         isPressed = false;
         mouseEvent = event->localPos();
 

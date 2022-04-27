@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     ///-------Create autopilot and move to thread with timer----------------------------------------
     autopilot = new Autopilot();
-    autopilot->init(1000);
+    autopilot->init(100);
 
     threadAutopilot = new QThread();
 
