@@ -11,6 +11,7 @@ LIBS += -lwiringPi
 SOURCES += \
         autopilot.cpp \
         controlleri2c.cpp \
+        drawtrack.cpp \
         gps.cpp \
         main.cpp \
         viewdata.cpp
@@ -31,5 +32,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     autopilot.h \
     controlleri2c.h \
+    drawtrack.h \
     gps.h \
     viewdata.h
