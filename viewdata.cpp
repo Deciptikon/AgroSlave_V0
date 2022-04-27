@@ -39,13 +39,24 @@ void ViewData::acceptCoord(const double &x, const double &y)
     setYCord(y);
 }
 
-void ViewData::slotCreateListPoint()
-{
-    //qDebug() << "void ViewData::slotCreateListPoint()";
-    emit signalCreateListPoint();
-}
-
 void ViewData::slotCommandToSlave14(int comm)
 {
     emit signalCommandToSlave14(comm);
+}
+
+void ViewData::acceptPath(const ListVector &path)
+{
+    this->path = path;
+    emit pathToQML(this->path);
+}
+
+void ViewData::acceptKeyPoints(const ListVector &keyPoints)
+{
+    this->keyPoints = keyPoints;
+    emit keyPointsToQML(this->keyPoints);
+}
+
+void ViewData::addKeyPointFromQML(const QVector2D point)
+{
+    emit sendKeyPointForAdding(point);
 }

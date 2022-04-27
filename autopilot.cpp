@@ -47,6 +47,7 @@ void Autopilot::loop()
 
     if(directionToPoint.length()<2) {
         listPoint2D.removeFirst();
+        emit keyPointsChanged(listPoint2D);
         return;
     }
 
@@ -92,61 +93,64 @@ void Autopilot::readFromGPS(const double &x, const double &y)
     while(path2D.size() > 100) {
         path2D.removeFirst();
     }
+
+    emit pathChanged(path2D);
 }
 
-void Autopilot::createListPoint()
+void Autopilot::addKeyPoint(const QVector2D &point)
 {
-//    listPoint2D.append({1,2});
-//    listPoint2D.append({3,4});
-//    listPoint2D.append({5,6});
-//    listPoint2D.append({7,8});
-//    listPoint2D.append({9,10});
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-    qDebug() << "////////////////////////////////////////////////////";
-
-    // поворачивает вектор vec на угол angle (в радианах) против часовой
-    // и возврвщвет вектор
-    auto rotate = [](QVector2D vec, float angle) -> QVector2D {
-        if(vec.isNull()) {
-            return vec;
-        }
-
-        QVector2D ortho{ vec.y(), -vec.x()};
-        QVector2D rot = vec*cos(angle) - ortho*sin(angle);
-
-        return rot;
-    };
-
-    if(path2D.isEmpty()) {
-        return;
-    }
-    if(direction.isNull()) {
-        return;
-    }
-
-    QVector2D pos = path2D.last();//текущее положение
-    float dist = 20; //растояние в метрах
-
-    listPoint2D.clear();
-
-    //первая точка: в 20 метрах спереди
-    listPoint2D.append( pos + dist*direction.normalized() );
-
-    //вторая точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI / 2.0) );
-
-    //третья точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI ) );
-
-    //четвертая точка: поворачиваем налево на 90' и едем 20 метров
-    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI * 3.0/2.0) );
-    //квадрат.
+    listPoint2D.append(point);
+    emit keyPointsChanged(listPoint2D);
 }
+
+//void Autopilot::createListPoint()
+//{
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+//    qDebug() << "////////////////////////////////////////////////////";
+
+//    // поворачивает вектор vec на угол angle (в радианах) против часовой
+//    // и возврвщвет вектор
+//    auto rotate = [](QVector2D vec, float angle) -> QVector2D {
+//        if(vec.isNull()) {
+//            return vec;
+//        }
+
+//        QVector2D ortho{ vec.y(), -vec.x()};
+//        QVector2D rot = vec*cos(angle) - ortho*sin(angle);
+
+//        return rot;
+//    };
+
+//    if(path2D.isEmpty()) {
+//        return;
+//    }
+//    if(direction.isNull()) {
+//        return;
+//    }
+
+//    QVector2D pos = path2D.last();//текущее положение
+//    float dist = 20; //растояние в метрах
+
+//    listPoint2D.clear();
+
+//    //первая точка: в 20 метрах спереди
+//    listPoint2D.append( pos + dist*direction.normalized() );
+
+//    //вторая точка: поворачиваем налево на 90' и едем 20 метров
+//    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI / 2.0) );
+
+//    //третья точка: поворачиваем налево на 90' и едем 20 метров
+//    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI ) );
+
+//    //четвертая точка: поворачиваем налево на 90' и едем 20 метров
+//    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI * 3.0/2.0) );
+//    //квадрат.
+//}
 
 int Autopilot::getMSecDeltaTime() const
 {

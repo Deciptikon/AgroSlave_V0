@@ -175,11 +175,6 @@ void DrawTrack::drawMouseEvent(QPainter *painter)
     painter->restore();
 }
 
-const QVector2D DrawTrack::getShiftCord() const
-{
-    return m_shiftCord;
-}
-
 const ListVector &DrawTrack::path() const
 {
     return m_path;

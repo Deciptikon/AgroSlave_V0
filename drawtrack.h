@@ -33,15 +33,12 @@ public:
     void paint(QPainter *painter) override;
 
 
-
-
     Q_INVOKABLE void swapCentered();
     Q_INVOKABLE void updatePath(const ListVector path);
     Q_INVOKABLE void updateKeyPoint(const ListVector points);
     Q_INVOKABLE void zoomIn();
     Q_INVOKABLE void zoomOut();
     Q_INVOKABLE QString getZoom();
-    const QVector2D getShiftCord() const;
 
 
     const ListVector &path() const;
@@ -108,7 +105,7 @@ private:
     void drawAxis(QPainter *painter);
     void drawPath(QPainter *painter);
     void drawKeypoint(QPainter *painter);
-    void drawMouseEvent(QPainter *painter);
+    void drawMouseEvent(QPainter *painter);//рисование области нажатия на дисплее
 
 
     int count = 0;
@@ -117,22 +114,34 @@ private:
 
     QTimer      *internalTimer;
 
-    ListVector m_path;
-    ListVector m_keypoint;
+    ListVector m_path;//точки пути
+    ListVector m_keypoint;//точки ключевые
+
+    // от этой точки будут вестись все расчеты
+    // это локальное начало координат
     QVector2D m_originPoint;
 
-    QPainterPath pathForDraw;
+    QPainterPath pathForDraw;//путь отрисовываемый
+
     qreal m_zoom;
     qreal m_widthPath;
     QColor m_colorPath;
+
+    // центрировать ли на текущем положении
+    // или на начале координат
     bool m_isCenteredLastPoint;
 
-    qreal m_msecUpdate;
-    bool m_isPaintAxis;
+    qreal m_msecUpdate;//интевал обновления отрисовки
 
+    bool m_isPaintAxis;//рисовать ли оси
+
+    // события нажатия на экран мышью/пальцем
     bool isPressed = false;
     QPointF mouseEvent;
 
+    // смещение центра экрана от начала координат
+    // равно нулю при центрировании на начале координат
+    // не равно нулю при центрировании на текущем положении
     QVector2D m_shiftCord;
 };
 

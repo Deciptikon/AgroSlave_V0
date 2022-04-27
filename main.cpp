@@ -6,9 +6,12 @@
 #include <QThread>
 #include <QTimer>
 #include <viewdata.h>
+#include "drawtrack.h"
 #include "autopilot.h"
 #include "gps.h"
 #include "controlleri2c.h"
+
+typedef QList<QVector2D> ListVector;
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +33,14 @@ int main(int argc, char *argv[])
     ControllerI2C *controlleri2c_14;
     QThread *threadControllerI2C_14;
 
+    QQmlApplicationEngine engine;
+
+    QQmlContext *context = engine.rootContext();
+    context->setContextProperty("ViewData", &viewData);
+
+    qmlRegisterType<DrawTrack>("DrawTrack",1,0,"DrawTrack");
+    qRegisterMetaType<ListVector>("ListVector");
+
 
     ///-------Create autopilot and move to thread with timer----------------------------------------
     autopilot = new Autopilot();
@@ -49,8 +60,6 @@ int main(int argc, char *argv[])
 
     ///-------Create GPS-reader----------------------------------------------------------------------
     gps = new GPS();
-    //gps->init();
-    //gps->setMsecUpdate(100);
 
     threadGPS = new QThread();
 
@@ -76,8 +85,13 @@ int main(int argc, char *argv[])
     ///-------Connects objects-----------------------------------------------------------------------
     autopilot->connect(gps      , SIGNAL(updatePositionXY(const double&, const double&)),
                                   SLOT(readFromGPS(const double&, const double&)) );
-    autopilot->connect(&viewData, SIGNAL(signalCreateListPoint()),
-                                  SLOT(createListPoint()) );
+    autopilot->connect(&viewData, SIGNAL(sendKeyPointForAdding(const QVector2D&)),
+                                  SLOT(addKeyPoint(const QVector2D&)) );
+
+    viewData.connect(autopilot, SIGNAL(pathChanged(const ListVector&)),
+                                SLOT(acceptPath(const ListVector&)) );
+    viewData.connect(autopilot, SIGNAL(keyPointsChanged(const ListVector&)),
+                                SLOT(acceptKeyPoints(const ListVector&)) );
 
     controlleri2c_14->connect(autopilot, SIGNAL(sendCommandToSlave14(const int&)),
                                          SLOT(writeData(const int&)) );
@@ -86,13 +100,6 @@ int main(int argc, char *argv[])
 
     ///----------------------------------------------------------------------------------------------
 
-
-
-
-    QQmlApplicationEngine engine;
-
-    QQmlContext *context = engine.rootContext();
-    context->setContextProperty("ViewData", &viewData);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

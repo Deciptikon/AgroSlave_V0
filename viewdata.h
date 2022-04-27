@@ -3,6 +3,11 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QList>
+#include <QVector2D>
+#include <QDebug>
+
+typedef QList<QVector2D> ListVector;
 
 class ViewData : public QObject
 {
@@ -28,18 +33,31 @@ signals:
     void yCordChanged();
     void yCordChanged(double y);
 
-    void signalCreateListPoint();
     void signalCommandToSlave14(const int &comm);
+
+    void pathToQML(const ListVector path);
+
+    void keyPointsToQML(const ListVector keyPoints);
+
+    void sendKeyPointForAdding(const QVector2D &point);
 
 public slots:
     void acceptCoord(const double &x, const double &y);
 
-    void slotCreateListPoint();
     void slotCommandToSlave14(int comm);
+
+    void acceptPath(const ListVector &path);
+
+    void acceptKeyPoints(const ListVector &keyPoints);
+
+    void addKeyPointFromQML(const QVector2D point);
 
 private:
     double m_xCord;
     double m_yCord;
+
+    ListVector path;
+    ListVector keyPoints;
 };
 
 #endif // VIEWDATA_H

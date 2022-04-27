@@ -8,6 +8,8 @@
 #include <QVector2D>
 #include <QVector3D>
 
+typedef QList<QVector2D> ListVector;
+
 class Autopilot : public QObject
 {
     Q_OBJECT
@@ -23,12 +25,18 @@ public:
 signals:
     void sendCommandToSlave14(const int &comm);
 
+    void pathChanged(const ListVector &path);
+
+    void keyPointsChanged(const ListVector &keyPoints);
+
 public slots:
     void loop();
 
     void readFromGPS(const double &x, const double &y);
 
-    void createListPoint();
+    void addKeyPoint(const QVector2D &point);
+
+//    void createListPoint();
 
 private slots:
 

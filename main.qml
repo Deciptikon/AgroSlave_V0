@@ -21,13 +21,16 @@ Window {
     }
 
 
+
+
+
     Rectangle {
         id: textCord
-        width: 300
+        width: 200
         height: width/4
         anchors.top: parent.top
         anchors.topMargin: 20
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: parent.left
         color: "#eeeeff"
         radius: 10
         property real leftMarg: 10
@@ -35,7 +38,7 @@ Window {
             id: textX
             text: qsTr("None")
             color: "orange"
-            font.pointSize: 18
+            font.pointSize: 14
             anchors.top: parent.top
             anchors.topMargin: 5
             anchors.left: parent.left
@@ -45,7 +48,7 @@ Window {
             id: textY
             text: qsTr("None")
             color: "orange"
-            font.pointSize: 18
+            font.pointSize: 14
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
             anchors.left: parent.left
@@ -55,27 +58,13 @@ Window {
     }
 
     Button {
-        id: btCreateListPoint
-        text: "Create List Point"
-        width: 300
-        height: width/4
-        anchors.top: textCord.bottom
-        anchors.topMargin: 20
-        anchors.horizontalCenter: parent.horizontalCenter
-        highlighted: true
-        onClicked: {
-            ViewData.slotCreateListPoint()
-        }
-    }
-
-    Button {
         id: btRestateRelay
         text: "ON|OFF Relay"
-        width: 300
+        width: textCord.width
         height: width/4
-        anchors.top: btCreateListPoint.bottom
+        anchors.top: textCord.bottom //btCreateListPoint.bottom
         anchors.topMargin: 20
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: textCord.horizontalCenter //parent.horizontalCenter
         highlighted: true
         onClicked: {
             ViewData.slotCommandToSlave14(120)
