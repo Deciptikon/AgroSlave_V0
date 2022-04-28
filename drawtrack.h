@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE void swapCentered();
     Q_INVOKABLE void updatePath(const ListVector path);
+    Q_INVOKABLE void appPointToPath(const QVector2D vec);
+    Q_INVOKABLE void appPointToPathAndRemoveFirst(const QVector2D vec);
     Q_INVOKABLE void updateKeyPoint(const ListVector points);
     Q_INVOKABLE void zoomIn();
     Q_INVOKABLE void zoomOut();
@@ -104,6 +106,8 @@ private:
     void drawPath(QPainter *painter);
     void drawKeypoint(QPainter *painter);
     void drawMouseEvent(QPainter *painter);//рисование области нажатия на дисплее
+
+    void pathToPaintedPath();
 
     QTimer      *internalTimer;
 

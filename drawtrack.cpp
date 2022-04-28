@@ -37,6 +37,25 @@ void DrawTrack::updatePath(const ListVector path)
     setPath(path);
 }
 
+void DrawTrack::appPointToPath(const QVector2D vec)
+{
+    this->m_path.append(vec);
+
+    pathToPaintedPath();
+
+    emit pathChanged();
+}
+
+void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
+{
+    this->m_path.append(vec);
+    this->m_path.removeFirst();
+
+    pathToPaintedPath();
+
+    emit pathChanged();
+}
+
 void DrawTrack::updateKeyPoint(const ListVector points)
 {
     //qDebug() << "keypoints ---> " << m_keypoint;
@@ -171,6 +190,26 @@ void DrawTrack::drawMouseEvent(QPainter *painter)
     painter->drawEllipse(mouseEvent, 2*r, 2*r);
 
     painter->restore();
+}
+
+void DrawTrack::pathToPaintedPath()
+{
+    pathForDraw.clear();
+
+    if(m_path.isEmpty()) {
+        return;
+    }
+
+    if(m_isCenteredLastPoint) {
+        setShiftCord(m_path.last() - originPoint());
+    } else {
+        setShiftCord({0,0});
+    }
+
+    pathForDraw.moveTo((m_path.first() - originPoint()).toPointF());
+    for(auto p: m_path) {
+        pathForDraw.lineTo((p - originPoint()).toPointF());
+    }
 }
 
 const ListVector &DrawTrack::path() const

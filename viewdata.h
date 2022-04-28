@@ -37,6 +37,10 @@ signals:
 
     void pathToQML(const ListVector path);
 
+    void signalAppPointToPathQML(const QVector2D vec);
+
+    void signalAppPointToPathAndRemoveFirstQML(const QVector2D vec);
+
     void keyPointsToQML(const ListVector keyPoints);
 
     void sendKeyPointForAdding(const QVector2D &point);
@@ -49,6 +53,10 @@ public slots:
     void slotCommandToSlave14(int comm);
 
     void acceptPath(const ListVector &path);
+
+    void slotAppPointToPath(const QVector2D &vec);
+
+    void slotAppPointToPathAndRemoveFirst(const QVector2D &vec);
 
     void acceptKeyPoints(const ListVector &keyPoints);
 

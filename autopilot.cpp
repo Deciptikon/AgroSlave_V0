@@ -89,13 +89,18 @@ void Autopilot::readFromGPS(const double &x, const double &y)
 
     float xp = x - xOrigin;
     float yp = y - yOrigin;
-    path2D.append({xp,yp});
+    QVector2D point{xp,yp};
 
-    while(path2D.size() > 100) {
+    path2D.append(point);
+
+    if(path2D.size() > 100) {
         path2D.removeFirst();
+        emit signalAppPointToPathAndRemoveFirst(point);
+    } else {
+        emit signalAppPointToPath(point);
     }
 
-    emit pathChanged(path2D);
+    //emit pathChanged(path2D);
 }
 
 void Autopilot::addKeyPoint(const QVector2D &point)

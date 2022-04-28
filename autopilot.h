@@ -27,7 +27,17 @@ signals:
 
     void pathChanged(const ListVector &path);
 
+    void signalAppPointToPath(const QVector2D &vec);
+
+    void signalAppPointToPathAndRemoveFirst(const QVector2D &vec);
+
     void keyPointsChanged(const ListVector &keyPoints);
+
+//    void signalAppKeyPoint(const QVector2D &vec);
+
+//    void signalRemoveFirstKeyPoint();
+
+//    void signalClearKeyPoints();
 
 public slots:
     void loop();

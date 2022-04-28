@@ -23,9 +23,12 @@ Window {
             textY.text = "Y = " + y
         }
 
-        //получаем обновленную траекторию для отображения в QML
-        function onPathToQML(path) {
-            drawtrack.updatePath(path)
+        //получаем и\или удаляем точки траектории для отображения в QML
+        function onSignalAppPointToPathQML(point) {
+            drawtrack.appPointToPath(point)
+        }
+        function onSignalAppPointToPathAndRemoveFirstQML(point) {
+            drawtrack.appPointToPathAndRemoveFirst(point)
         }
 
         //ролучаем список ключевых точек для отображения в QML

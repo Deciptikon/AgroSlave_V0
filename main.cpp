@@ -106,8 +106,15 @@ int main(int argc, char *argv[])
 
     // изменение пути и ключевых точек в автопилоте передаются в viewData
     // для дальнейшего отображения
-    viewData.connect(autopilot, SIGNAL(pathChanged(const ListVector&)),
-                                SLOT(acceptPath(const ListVector&)) );
+//    viewData.connect(autopilot, SIGNAL(pathChanged(const ListVector&)),
+//                                SLOT(acceptPath(const ListVector&)) );
+//    viewData.connect(autopilot, SIGNAL(keyPointsChanged(const ListVector&)),
+//                                SLOT(acceptKeyPoints(const ListVector&)) );
+    viewData.connect(autopilot, SIGNAL(signalAppPointToPathAndRemoveFirst(const QVector2D&)),
+                                SLOT(slotAppPointToPathAndRemoveFirst(const QVector2D&)) );
+    viewData.connect(autopilot, SIGNAL(signalAppPointToPath(const QVector2D&)),
+                                SLOT(slotAppPointToPath(const QVector2D&)) );
+
     viewData.connect(autopilot, SIGNAL(keyPointsChanged(const ListVector&)),
                                 SLOT(acceptKeyPoints(const ListVector&)) );
 
