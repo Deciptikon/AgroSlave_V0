@@ -36,6 +36,8 @@ public slots:
 
     void addKeyPoint(const QVector2D &point);
 
+    void slotCreateQuadroKeyPoint();
+
 private slots:
 
 private:

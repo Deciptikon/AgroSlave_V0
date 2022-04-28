@@ -41,6 +41,8 @@ signals:
 
     void sendKeyPointForAdding(const QVector2D &point);
 
+    void signalCreateQuadroKeyPoint();
+
 public slots:
     void acceptCoord(const double &x, const double &y);
 
@@ -51,6 +53,8 @@ public slots:
     void acceptKeyPoints(const ListVector &keyPoints);
 
     void addKeyPointFromQML(const QVector2D point);
+
+    void slotCreateQuadroKeyPoint();
 
 private:
     double m_xCord;

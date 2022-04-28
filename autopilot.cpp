@@ -104,6 +104,49 @@ void Autopilot::addKeyPoint(const QVector2D &point)
     emit keyPointsChanged(listPoint2D);
 }
 
+void Autopilot::slotCreateQuadroKeyPoint()
+{
+    // поворачивает вектор vec на угол angle (в радианах) против часовой
+    // и возврвщвет вектор
+    auto rotate = [](QVector2D vec, float angle) -> QVector2D {
+        if(vec.isNull()) {
+            return vec;
+        }
+
+        QVector2D ortho{ vec.y(), -vec.x()};
+        QVector2D rot = vec*cos(angle) - ortho*sin(angle);
+
+        return rot;
+    };
+
+    if(path2D.isEmpty()) {
+        return;
+    }
+    if(direction.isNull()) {
+        return;
+    }
+
+    QVector2D pos = path2D.last();//текущее положение
+    float dist = 20; //растояние в метрах
+
+    listPoint2D.clear();
+
+    //первая точка: в 20 метрах спереди
+    listPoint2D.append( pos + dist*direction.normalized() );
+
+    //вторая точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI / 2.0) );
+
+    //третья точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI ) );
+
+    //четвертая точка: поворачиваем налево на 90' и едем 20 метров
+    listPoint2D.append( listPoint2D.last() + dist*rotate(direction.normalized(), M_PI * 3.0/2.0) );
+    //квадрат.
+
+    emit keyPointsChanged(listPoint2D);
+}
+
 int Autopilot::getMSecDeltaTime() const
 {
     return msecDeltaTime;

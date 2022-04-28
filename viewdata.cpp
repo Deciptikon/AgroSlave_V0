@@ -60,3 +60,8 @@ void ViewData::addKeyPointFromQML(const QVector2D point)
 {
     emit sendKeyPointForAdding(point);
 }
+
+void ViewData::slotCreateQuadroKeyPoint()
+{
+    emit signalCreateQuadroKeyPoint();
+}

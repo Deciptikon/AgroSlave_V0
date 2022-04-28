@@ -100,6 +100,10 @@ int main(int argc, char *argv[])
     autopilot->connect(&viewData, SIGNAL(sendKeyPointForAdding(const QVector2D&)),
                                   SLOT(addKeyPoint(const QVector2D&)) );
 
+    // генерируем четыре ключевые точки в вершинах квадрата по направлению движения
+    autopilot->connect(&viewData, SIGNAL(signalCreateQuadroKeyPoint()),
+                                  SLOT(slotCreateQuadroKeyPoint()) );
+
     // изменение пути и ключевых точек в автопилоте передаются в viewData
     // для дальнейшего отображения
     viewData.connect(autopilot, SIGNAL(pathChanged(const ListVector&)),

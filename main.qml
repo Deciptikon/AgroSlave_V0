@@ -160,4 +160,18 @@ Window {
         }
     }
 
+    Button {// переключение реле
+        id: btCreateQuadro
+        text: "Quadro"
+        width: textCord.width/2
+        height: width/4
+        anchors.top: btRestateRelay.bottom //btCreateListPoint.bottom
+        anchors.topMargin: 20
+        anchors.left: btRestateRelay.left //parent.horizontalCenter
+        highlighted: true
+        onClicked: {
+            ViewData.slotCreateQuadroKeyPoint()
+        }
+    }
+
 }
