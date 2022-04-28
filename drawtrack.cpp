@@ -130,7 +130,7 @@ void DrawTrack::drawPath(QPainter *painter)
     painter->setPen(penLine);
 
     painter->translate( this->width()/2 - m_shiftCord.x()*m_zoom,
-                        this->height()/2 - m_shiftCord.y()*m_zoom);
+                        this->height()/2 + m_shiftCord.y()*m_zoom);
 
     painter->scale(m_zoom, -m_zoom);//отражаем ось Y
 
@@ -157,7 +157,7 @@ void DrawTrack::drawKeypoint(QPainter *painter)
     painter->save();
 
     painter->translate( this->width()/2 - m_shiftCord.x()*m_zoom,
-                        this->height()/2 - m_shiftCord.y()*m_zoom);
+                        this->height()/2 + m_shiftCord.y()*m_zoom);
 
     painter->scale(m_zoom, -m_zoom);//отражаем ось Y
 
