@@ -2,7 +2,7 @@
 
 DrawTrack::DrawTrack(QQuickItem *parent):
     m_originPoint(0,0),
-    m_zoom(2),
+    m_zoom(8),
     m_widthPath(2),
     m_colorPath(255,0,0),
     m_isCenteredLastPoint(false),
@@ -132,7 +132,7 @@ void DrawTrack::drawPath(QPainter *painter)
     painter->translate( this->width()/2 - m_shiftCord.x()*m_zoom,
                         this->height()/2 - m_shiftCord.y()*m_zoom);
 
-    painter->scale(m_zoom, m_zoom);
+    painter->scale(m_zoom, -m_zoom);//отражаем ось Y
 
     painter->drawPath(pathForDraw);
 
@@ -155,10 +155,12 @@ void DrawTrack::drawKeypoint(QPainter *painter)
     penLine.setColor(QColor(0,255,0));
     painter->setPen(penLine);
     painter->save();
+
     painter->translate( this->width()/2 - m_shiftCord.x()*m_zoom,
                         this->height()/2 - m_shiftCord.y()*m_zoom);
 
-    painter->scale(m_zoom, m_zoom);
+    painter->scale(m_zoom, -m_zoom);//отражаем ось Y
+
 
     float r = 2;
     for (auto p: qAsConst(m_keypoint)) {
@@ -282,7 +284,7 @@ void DrawTrack::setZoom(qreal newZoom)
         return;
     if (qFuzzyCompare(m_zoom, newZoom))
         return;
-    if(newZoom > 100)
+    if(newZoom > 128)
         return;
     if(newZoom < 0.01)
         return;
@@ -395,8 +397,8 @@ void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
         mouseEvent = event->localPos();
 
         QVector2D p;
-        p.setX((mouseEvent.x() - this->width() /2.0)/m_zoom  + m_shiftCord.x());
-        p.setY((mouseEvent.y() - this->height()/2.0)/m_zoom  + m_shiftCord.y());
+        p.setX( (mouseEvent.x() - this->width() /2.0)/m_zoom  + m_shiftCord.x());
+        p.setY(-(mouseEvent.y() - this->height()/2.0)/m_zoom  + m_shiftCord.y());//отражаем ось Y
 
         emit releaseCoordinate(p);
 
