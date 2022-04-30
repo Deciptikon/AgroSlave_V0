@@ -102,6 +102,9 @@ signals:
 
     void colorKeyPointChanged();
 
+private slots:
+    void intervalChanged();
+
 private:
     void drawAxis(QPainter *painter);
     void drawPath(QPainter *painter);
@@ -112,26 +115,27 @@ private:
 
     QTimer      *internalTimer;
 
-    ListVector m_path;//точки пути
-    ListVector m_keypoint;//точки ключевые
+    ListVector m_path;// точки пути
+    ListVector m_keypoint;// точки ключевые
 
     // от этой точки будут вестись все расчеты
     // это локальное начало координат
     QVector2D m_originPoint;
 
-    QPainterPath pathForDraw;//путь отрисовываемый
+    QPainterPath pathForDraw;// путь отрисовываемый
 
-    qreal m_zoom;
-    qreal m_widthPath;
-    QColor m_colorPath;
+    qreal m_zoom;// приближение
+
+    qreal m_widthPath;// ширина пути
+    QColor m_colorPath;// цвет пути
 
     // центрировать ли на текущем положении
     // или на начале координат
     bool m_isCenteredLastPoint;
 
-    qreal m_msecUpdate;//интевал обновления отрисовки
+    qreal m_msecUpdate;// интевал обновления отрисовки
 
-    bool m_isPaintAxis;//рисовать ли оси
+    bool m_isPaintAxis;// рисовать ли оси
 
     // события нажатия на экран мышью/пальцем
     bool isPressed = false;
@@ -141,9 +145,13 @@ private:
     // равно нулю при центрировании на начале координат
     // не равно нулю при центрировании на текущем положении
     QVector2D m_shiftCord;
+
+    // обновление при изменении пути или клюяевых точек
     bool m_isUpdateFromChanged;
-    QColor m_colorGround;
-    QColor m_colorKeyPoint;
+
+    QColor m_colorGround;// цвет фона
+
+    QColor m_colorKeyPoint;// цвет ключевых точек
 };
 
 #endif // DRAWTRACK_H

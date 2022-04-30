@@ -18,7 +18,14 @@ DrawTrack::DrawTrack(QQuickItem *parent):
         //здесь можно что-то обновить
         update();
     } );
-    internalTimer->start(m_msecUpdate);
+
+    // связываем изменение переменной с работой таймера
+    connect(this, SIGNAL(msecUpdateChanged()),
+            this, SLOT(intervalChanged()) );
+
+    internalTimer->start(msecUpdate());
+
+    // отслеживаем левую кнопку мыши
     setAcceptedMouseButtons(Qt::LeftButton);
 }
 
@@ -366,6 +373,14 @@ void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
 
         update();
     }
+}
+
+void DrawTrack::intervalChanged()
+{
+    if(internalTimer == nullptr) {
+        return;
+    }
+    internalTimer->setInterval(msecUpdate());
 }
 
 bool DrawTrack::isUpdateFromChanged() const
