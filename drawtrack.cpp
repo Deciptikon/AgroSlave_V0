@@ -8,7 +8,9 @@ DrawTrack::DrawTrack(QQuickItem *parent):
     m_isCenteredLastPoint(false),
     m_msecUpdate(100),
     m_isPaintAxis(true),
-    m_shiftCord(0,0)
+    m_shiftCord(0,0),
+    m_isUpdateFromChanged(true),
+    m_colorGround(100, 255, 100)
 {
     internalTimer = new QTimer(this);
     connect(internalTimer, &QTimer::timeout, [=](){
@@ -21,6 +23,10 @@ DrawTrack::DrawTrack(QQuickItem *parent):
 
 void DrawTrack::paint(QPainter *painter)
 {
+    // заливаем фон
+    painter->fillRect(            0,              0,
+                      this->width(), this->height(),
+                      colorGround() );
     drawAxis(painter);
     drawPath(painter);
     drawKeypoint(painter);
@@ -38,7 +44,9 @@ void DrawTrack::appPointToPath(const QVector2D vec)
 
     pathToPaintedPath();
 
-    emit pathChanged();
+    if(m_isUpdateFromChanged) {
+        emit pathChanged();
+    }
 }
 
 void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
@@ -48,14 +56,22 @@ void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
 
     pathToPaintedPath();
 
-    emit pathChanged();
+    if(m_isUpdateFromChanged) {
+        emit pathChanged();
+    }
 }
 
 void DrawTrack::updateKeyPoint(const ListVector points)
 {
     //qDebug() << "keypoints ---> " << m_keypoint;
     //setKeypoint(points);
+
     m_keypoint = points;
+
+    if(m_isUpdateFromChanged) {
+        emit keypointChanged();
+    }
+
 }
 
 void DrawTrack::drawAxis(QPainter *painter)
@@ -147,6 +163,12 @@ void DrawTrack::drawKeypoint(QPainter *painter)
         return;
     }
 
+    auto paintEllipse = [&]( QPointF pos, qreal radius, int num) {
+        painter->drawEllipse(pos, radius*m_zoom, radius*m_zoom);
+        painter->drawText(QPointF{pos.x() - 0.1*radius*m_zoom,
+                                  pos.y() + 0.5*radius*m_zoom}, QString::number(num));
+    };
+
     QPen penLine{Qt::NoBrush, 2.0/m_zoom, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin};
     penLine.setColor(QColor(0,255,0));
     painter->setPen(penLine);
@@ -159,8 +181,10 @@ void DrawTrack::drawKeypoint(QPainter *painter)
 
 
     float r = 2;
+    int count = 0;
     for (auto p: qAsConst(m_keypoint)) {
-        painter->drawEllipse(p.toPointF(), r, r);
+        //painter->drawEllipse(p.toPointF(), r, r);
+        paintEllipse(p.toPointF(), r, count++);
     }
 
     painter->restore();
@@ -341,4 +365,30 @@ void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
 
         update();
     }
+}
+
+bool DrawTrack::isUpdateFromChanged() const
+{
+    return m_isUpdateFromChanged;
+}
+
+void DrawTrack::setIsUpdateFromChanged(bool newIsUpdateFromChanged)
+{
+    if (m_isUpdateFromChanged == newIsUpdateFromChanged)
+        return;
+    m_isUpdateFromChanged = newIsUpdateFromChanged;
+    emit isUpdateFromChangedChanged();
+}
+
+const QColor &DrawTrack::colorGround() const
+{
+    return m_colorGround;
+}
+
+void DrawTrack::setColorGround(const QColor &newColorGround)
+{
+    if (m_colorGround == newColorGround)
+        return;
+    m_colorGround = newColorGround;
+    emit colorGroundChanged();
 }

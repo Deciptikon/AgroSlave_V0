@@ -52,8 +52,6 @@ public slots:
 
     void slotCommandToSlave14(int comm);
 
-    void acceptPath(const ListVector &path);
-
     void slotAppPointToPath(const QVector2D &vec);
 
     void slotAppPointToPathAndRemoveFirst(const QVector2D &vec);

@@ -44,12 +44,6 @@ void ViewData::slotCommandToSlave14(int comm)
     emit signalCommandToSlave14(comm);
 }
 
-void ViewData::acceptPath(const ListVector &path)
-{
-    this->path = path;
-    emit pathToQML(this->path);
-}
-
 void ViewData::slotAppPointToPath(const QVector2D &vec)
 {
     QVector2D v = vec;
