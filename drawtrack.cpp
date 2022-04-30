@@ -19,9 +19,16 @@ DrawTrack::DrawTrack(QQuickItem *parent):
         update();
     } );
 
+
     // связываем изменение переменной с работой таймера
     connect(this, SIGNAL(msecUpdateChanged()),
             this, SLOT(intervalChanged()) );
+
+    // перерисовываем если изменились путь и\или ключевые точки
+    connect(this, SIGNAL(pathChanged()),
+            this, SLOT(checkAndUpdate()) );
+    connect(this, SIGNAL(keypointChanged()),
+            this, SLOT(checkAndUpdate()) );
 
     internalTimer->start(msecUpdate());
 
@@ -52,9 +59,7 @@ void DrawTrack::appPointToPath(const QVector2D vec)
 
     pathToPaintedPath();
 
-    if(m_isUpdateFromChanged) {
-        emit pathChanged();
-    }
+    emit pathChanged();
 }
 
 void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
@@ -64,9 +69,7 @@ void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
 
     pathToPaintedPath();
 
-    if(m_isUpdateFromChanged) {
-        emit pathChanged();
-    }
+    emit pathChanged();
 }
 
 void DrawTrack::updateKeyPoint(const ListVector points)
@@ -76,10 +79,7 @@ void DrawTrack::updateKeyPoint(const ListVector points)
 
     m_keypoint = points;
 
-    if(m_isUpdateFromChanged) {
-        emit keypointChanged();
-    }
-
+    emit keypointChanged();
 }
 
 void DrawTrack::drawAxis(QPainter *painter)
@@ -381,6 +381,13 @@ void DrawTrack::intervalChanged()
         return;
     }
     internalTimer->setInterval(msecUpdate());
+}
+
+void DrawTrack::checkAndUpdate()
+{
+    if(m_isUpdateFromChanged) {
+        update();
+    }
 }
 
 bool DrawTrack::isUpdateFromChanged() const

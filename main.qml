@@ -59,6 +59,14 @@ Window {
         anchors.fill: parent
         anchors.centerIn:  parent
 
+        //проверка работы параметров
+        msecUpdate: 1000
+        isUpdateFromChanged: true
+        widthPath: 3
+        colorPath: "#ff0000"
+        colorKeyPoint: "#0000ff"
+        colorGround: "#aaffaa"
+        isPaintAxis: true
     }
 
     Button {//кнопка переключения центрирования

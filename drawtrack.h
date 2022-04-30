@@ -24,7 +24,7 @@ class DrawTrack : public QQuickPaintedItem
     Q_PROPERTY(QColor colorGround READ colorGround WRITE setColorGround NOTIFY colorGroundChanged)
     Q_PROPERTY(bool   isPaintAxis READ isPaintAxis WRITE setIsPaintAxis NOTIFY isPaintAxisChanged)
     Q_PROPERTY(bool   isCenteredLastPoint READ isCenteredLastPoint WRITE setIsCenteredLastPoint NOTIFY isCenteredLastPointChanged)
-    Q_PROPERTY(bool isUpdateFromChanged READ isUpdateFromChanged WRITE setIsUpdateFromChanged NOTIFY isUpdateFromChangedChanged)
+    Q_PROPERTY(bool   isUpdateFromChanged READ isUpdateFromChanged WRITE setIsUpdateFromChanged NOTIFY isUpdateFromChangedChanged)
 
 public:
     explicit DrawTrack(QQuickItem *parent = 0);
@@ -104,6 +104,7 @@ signals:
 
 private slots:
     void intervalChanged();
+    void checkAndUpdate();
 
 private:
     void drawAxis(QPainter *painter);
