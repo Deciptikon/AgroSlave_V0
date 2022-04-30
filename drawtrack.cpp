@@ -172,7 +172,8 @@ void DrawTrack::drawKeypoint(QPainter *painter)
     }
 
     auto paintEllipse = [&]( QPointF pos, qreal radius, int num) {
-        painter->drawEllipse(pos, radius*m_zoom, radius*m_zoom);
+
+        painter->drawEllipse(pos, radius, radius);
 //        painter->drawText(QPointF{pos.x() - 0.1*radius,
 //                                  pos.y() + 0.5*radius}, QString::number(num));
     };
