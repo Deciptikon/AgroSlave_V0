@@ -20,6 +20,7 @@ class DrawTrack : public QQuickPaintedItem
     Q_PROPERTY(qreal  zoom        READ zoom        WRITE setZoom        NOTIFY zoomChanged)
     Q_PROPERTY(qreal  widthPath   READ widthPath   WRITE setWidthPath   NOTIFY widthPathChanged)
     Q_PROPERTY(QColor colorPath   READ colorPath   WRITE setColorPath   NOTIFY colorPathChanged)
+    Q_PROPERTY(QColor colorKeyPoint READ colorKeyPoint WRITE setColorKeyPoint NOTIFY colorKeyPointChanged)
     Q_PROPERTY(QColor colorGround READ colorGround WRITE setColorGround NOTIFY colorGroundChanged)
     Q_PROPERTY(bool   isPaintAxis READ isPaintAxis WRITE setIsPaintAxis NOTIFY isPaintAxisChanged)
     Q_PROPERTY(bool   isCenteredLastPoint READ isCenteredLastPoint WRITE setIsCenteredLastPoint NOTIFY isCenteredLastPointChanged)
@@ -64,6 +65,9 @@ public:
     const QColor &colorGround() const;
     void setColorGround(const QColor &newColorGround);
 
+    const QColor &colorKeyPoint() const;
+    void setColorKeyPoint(const QColor &newColorKeyPoint);
+
 protected: // QQuickItem interface
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -95,6 +99,8 @@ signals:
     void isUpdateFromChangedChanged();
 
     void colorGroundChanged();
+
+    void colorKeyPointChanged();
 
 private:
     void drawAxis(QPainter *painter);
@@ -137,6 +143,7 @@ private:
     QVector2D m_shiftCord;
     bool m_isUpdateFromChanged;
     QColor m_colorGround;
+    QColor m_colorKeyPoint;
 };
 
 #endif // DRAWTRACK_H

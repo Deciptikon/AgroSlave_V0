@@ -10,7 +10,8 @@ DrawTrack::DrawTrack(QQuickItem *parent):
     m_isPaintAxis(true),
     m_shiftCord(0,0),
     m_isUpdateFromChanged(true),
-    m_colorGround(100, 255, 100)
+    m_colorGround(200, 255, 200),
+    m_colorKeyPoint(0, 0, 255)
 {
     internalTimer = new QTimer(this);
     connect(internalTimer, &QTimer::timeout, [=](){
@@ -165,12 +166,12 @@ void DrawTrack::drawKeypoint(QPainter *painter)
 
     auto paintEllipse = [&]( QPointF pos, qreal radius, int num) {
         painter->drawEllipse(pos, radius*m_zoom, radius*m_zoom);
-        painter->drawText(QPointF{pos.x() - 0.1*radius*m_zoom,
-                                  pos.y() + 0.5*radius*m_zoom}, QString::number(num));
+//        painter->drawText(QPointF{pos.x() - 0.1*radius,
+//                                  pos.y() + 0.5*radius}, QString::number(num));
     };
 
     QPen penLine{Qt::NoBrush, 2.0/m_zoom, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin};
-    penLine.setColor(QColor(0,255,0));
+    penLine.setColor(colorKeyPoint());
     painter->setPen(penLine);
     painter->save();
 
@@ -391,4 +392,17 @@ void DrawTrack::setColorGround(const QColor &newColorGround)
         return;
     m_colorGround = newColorGround;
     emit colorGroundChanged();
+}
+
+const QColor &DrawTrack::colorKeyPoint() const
+{
+    return m_colorKeyPoint;
+}
+
+void DrawTrack::setColorKeyPoint(const QColor &newColorKeyPoint)
+{
+    if (m_colorKeyPoint == newColorKeyPoint)
+        return;
+    m_colorKeyPoint = newColorKeyPoint;
+    emit colorKeyPointChanged();
 }
