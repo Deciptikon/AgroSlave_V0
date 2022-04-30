@@ -68,7 +68,6 @@ private:
     double m_xCord;
     double m_yCord;
 
-    ListVector path;
     ListVector keyPoints;
 };
 

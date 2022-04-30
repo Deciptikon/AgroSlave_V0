@@ -12,7 +12,7 @@ DrawTrack::DrawTrack(QQuickItem *parent):
 {
     internalTimer = new QTimer(this);
     connect(internalTimer, &QTimer::timeout, [=](){
-        //здась можно что-то обновить
+        //здесь можно что-то обновить
         update();
     } );
     internalTimer->start(m_msecUpdate);
@@ -30,11 +30,6 @@ void DrawTrack::paint(QPainter *painter)
 void DrawTrack::swapCentered()
 {
     setIsCenteredLastPoint(!isCenteredLastPoint());
-}
-
-void DrawTrack::updatePath(const ListVector path)
-{
-    setPath(path);
 }
 
 void DrawTrack::appPointToPath(const QVector2D vec)
@@ -59,7 +54,8 @@ void DrawTrack::appPointToPathAndRemoveFirst(const QVector2D vec)
 void DrawTrack::updateKeyPoint(const ListVector points)
 {
     //qDebug() << "keypoints ---> " << m_keypoint;
-    setKeypoint(points);
+    //setKeypoint(points);
+    m_keypoint = points;
 }
 
 void DrawTrack::drawAxis(QPainter *painter)
@@ -203,74 +199,15 @@ void DrawTrack::pathToPaintedPath()
     }
 
     if(m_isCenteredLastPoint) {
-        setShiftCord(m_path.last() - originPoint());
+        m_shiftCord = m_path.last() - m_originPoint;
     } else {
-        setShiftCord({0,0});
+        m_shiftCord = {0,0};
     }
 
-    pathForDraw.moveTo((m_path.first() - originPoint()).toPointF());
+    pathForDraw.moveTo((m_path.first() - m_originPoint).toPointF());
     for(auto p: m_path) {
-        pathForDraw.lineTo((p - originPoint()).toPointF());
+        pathForDraw.lineTo((p - m_originPoint).toPointF());
     }
-}
-
-const ListVector &DrawTrack::path() const
-{
-    return m_path;
-}
-
-void DrawTrack::setPath(const ListVector &newPath)
-{
-    if (m_path == newPath)
-        return;
-
-    m_path = newPath;
-
-    pathForDraw.clear();
-
-    if(m_path.isEmpty()) {
-        return;
-    }
-
-    if(m_isCenteredLastPoint) {
-        setShiftCord(m_path.last() - originPoint());
-    } else {
-        setShiftCord({0,0});
-    }
-
-    pathForDraw.moveTo((m_path.first() - originPoint()).toPointF());
-    for(auto p: m_path) {
-        pathForDraw.lineTo((p - originPoint()).toPointF());
-
-    }
-
-    emit pathChanged();
-}
-
-const ListVector &DrawTrack::keypoint() const
-{
-    return m_keypoint;
-}
-
-void DrawTrack::setKeypoint(const ListVector &newKeypoint)
-{
-    if (m_keypoint == newKeypoint)
-        return;
-    m_keypoint = newKeypoint;
-    emit keypointChanged();
-}
-
-const QVector2D &DrawTrack::originPoint() const
-{
-    return m_originPoint;
-}
-
-void DrawTrack::setOriginPoint(const QVector2D &newOriginPoint)
-{
-    if (m_originPoint == newOriginPoint)
-        return;
-    m_originPoint = newOriginPoint;
-    emit originPointChanged();
 }
 
 qreal DrawTrack::zoom() const
@@ -404,17 +341,4 @@ void DrawTrack::mouseReleaseEvent(QMouseEvent *event)
 
         update();
     }
-}
-
-const QVector2D &DrawTrack::shiftCord() const
-{
-    return m_shiftCord;
-}
-
-void DrawTrack::setShiftCord(const QVector2D &newShiftCord)
-{
-    if (m_shiftCord == newShiftCord)
-        return;
-    m_shiftCord = newShiftCord;
-    emit shiftCordChanged();
 }

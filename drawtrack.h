@@ -16,16 +16,12 @@ class DrawTrack : public QQuickPaintedItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(qreal msecUpdate READ msecUpdate WRITE setMsecUpdate NOTIFY msecUpdateChanged)
-    Q_PROPERTY(ListVector path READ path WRITE setPath NOTIFY pathChanged)
-    Q_PROPERTY(ListVector keypoint READ keypoint WRITE setKeypoint NOTIFY keypointChanged)
-    Q_PROPERTY(QVector2D originPoint READ originPoint WRITE setOriginPoint NOTIFY originPointChanged)
-    Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
-    Q_PROPERTY(qreal widthPath READ widthPath WRITE setWidthPath NOTIFY widthPathChanged)
-    Q_PROPERTY(QColor colorPath READ colorPath WRITE setColorPath NOTIFY colorPathChanged)
-    Q_PROPERTY(QVector2D shiftCord READ shiftCord WRITE setShiftCord NOTIFY shiftCordChanged)
-    Q_PROPERTY(bool isCenteredLastPoint READ isCenteredLastPoint WRITE setIsCenteredLastPoint NOTIFY isCenteredLastPointChanged)
-    Q_PROPERTY(bool isPaintAxis READ isPaintAxis WRITE setIsPaintAxis NOTIFY isPaintAxisChanged)
+    Q_PROPERTY(qreal  msecUpdate  READ msecUpdate  WRITE setMsecUpdate  NOTIFY msecUpdateChanged)
+    Q_PROPERTY(qreal  zoom        READ zoom        WRITE setZoom        NOTIFY zoomChanged)
+    Q_PROPERTY(qreal  widthPath   READ widthPath   WRITE setWidthPath   NOTIFY widthPathChanged)
+    Q_PROPERTY(QColor colorPath   READ colorPath   WRITE setColorPath   NOTIFY colorPathChanged)
+    Q_PROPERTY(bool   isPaintAxis READ isPaintAxis WRITE setIsPaintAxis NOTIFY isPaintAxisChanged)
+    Q_PROPERTY(bool   isCenteredLastPoint READ isCenteredLastPoint WRITE setIsCenteredLastPoint NOTIFY isCenteredLastPointChanged)
 
 public:
     explicit DrawTrack(QQuickItem *parent = 0);
@@ -34,7 +30,6 @@ public:
 
 
     Q_INVOKABLE void swapCentered();
-    Q_INVOKABLE void updatePath(const ListVector path);
     Q_INVOKABLE void appPointToPath(const QVector2D vec);
     Q_INVOKABLE void appPointToPathAndRemoveFirst(const QVector2D vec);
     Q_INVOKABLE void updateKeyPoint(const ListVector points);
@@ -42,15 +37,6 @@ public:
     Q_INVOKABLE void zoomOut();
     Q_INVOKABLE QString getZoom();
 
-
-    const ListVector &path() const;
-    void setPath(const ListVector &newPath);
-
-    const ListVector &keypoint() const;
-    void setKeypoint(const ListVector &newKeypoint);
-
-    const QVector2D &originPoint() const;
-    void setOriginPoint(const QVector2D &newOriginPoint);
 
     qreal zoom() const;
     void setZoom(qreal newZoom);
@@ -69,9 +55,6 @@ public:
 
     bool isPaintAxis() const;
     void setIsPaintAxis(bool newIsPaintAxis);
-
-    const QVector2D &shiftCord() const;
-    void setShiftCord(const QVector2D &newShiftCord);
 
 protected: // QQuickItem interface
     void mousePressEvent(QMouseEvent *event) override;

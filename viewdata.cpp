@@ -53,15 +53,12 @@ void ViewData::acceptPath(const ListVector &path)
 void ViewData::slotAppPointToPath(const QVector2D &vec)
 {
     QVector2D v = vec;
-    this->path.append(v);
     emit signalAppPointToPathQML(v);
 }
 
 void ViewData::slotAppPointToPathAndRemoveFirst(const QVector2D &vec)
 {
     QVector2D v = vec;
-    this->path.append(v);
-    this->path.removeFirst();
     emit signalAppPointToPathAndRemoveFirstQML(v);
 }
 
