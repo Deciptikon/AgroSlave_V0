@@ -127,9 +127,9 @@ void GPS::ubxParser()
     //qDebug() << "Data is valid";
     data.remove(0,4);// delete class & id &  2 bite length payload
 
-    double lon = ((data[7] << 24) + (data[6] << 16) + (data[5] << 8) + data[4]);
+    double lon = ((data[7] << 24) + (data[6] << 16) + (uint16_t)(data[5] << 8) + (uint8_t)data[4]);
     this->lon = lon * 0.0000001;
-    double lat = ((data[11]<< 24) + (data[10]<< 16) + (data[9] << 8) + data[8]);
+    double lat = ((data[11]<< 24) + (data[10]<< 16) + (uint16_t)(data[9] << 8) + (uint8_t)data[8]);
     this->lat = lat * 0.0000001;
     //qDebug() << "Latitude:" << QString::number(lat, 'd', 7) << "\tLongitude:" << QString::number(lon, 'd', 7);
 
